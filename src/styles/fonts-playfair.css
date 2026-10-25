@@ -1,17 +1,16 @@
-@font-face {
-  font-family: 'Playfair Display';
-  src: url('/PlayfairDisplay-VariableFont_wght.ttf') format('truetype-variations'),
-       url('/PlayfairDisplay-VariableFont_wght.ttf') format('truetype');
-  font-weight: 400 900;
-  font-style: normal;
-  font-display: swap;
-}
+/* ==========================================================================
+   PLAYFAIR DISPLAY WEBFONT
+   --------------------------------------------------------------------------
+   The @font-face rules live in src\fonts.ts, which registers both cuts (the
+   upright variable TTF and the italic variable TTF, copied from the repo root
+   into public\fonts\) at runtime with a Vite base-relative URL
+   (import.meta.env.BASE_URL). A CSS url() cannot express that: relative paths
+   re-resolve to the stylesheet's own location in the build output, and
+   absolute paths pin to the domain root, which 404s when the site is deployed
+   under a subpath such as GitHub Pages' /My-website/.
 
-@font-face {
-  font-family: 'Playfair Display';
-  src: url('/PlayfairDisplay-Italic-VariableFont_wght.ttf') format('truetype-variations'),
-       url('/PlayfairDisplay-Italic-VariableFont_wght.ttf') format('truetype');
-  font-weight: 400 900;
-  font-style: italic;
-  font-display: swap;
-}
+   Both files ship as public assets:
+     public/fonts/PlayfairDisplay-VariableFont_wght.ttf        (upright)
+     public/fonts/PlayfairDisplay-Italic-VariableFont_wght.ttf (italic)
+   The originals at the repo root remain untouched.
+   ========================================================================== */

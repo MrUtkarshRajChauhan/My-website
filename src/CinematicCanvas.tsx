@@ -20,9 +20,15 @@ const FRAME_SET = frameParam === 'public' ? 'frames-public' : 'frames-hq'
 
 const allFrames: string[] = []
 
+// The frames live in public/, so their URL must be built from Vite's base URL
+// rather than hand-written. A literal '../frames-hq/...' or '/frames-hq/...'
+// resolves against the deploy root and 404s when the site is served from a
+// subpath (GitHub Pages serves this repo at /My-website/). import.meta.env.BASE
+// _URL is '/' in dev and './' in the production build, so the same code works
+// at the domain root and under any subdirectory.
 for (let i = 1; i <= 183; i++) {
   const num = i.toString().padStart(3, '0')
-  allFrames.push(`../${FRAME_SET}/ezgif-frame-${num}.jpg`)
+  allFrames.push(`${import.meta.env.BASE_URL}${FRAME_SET}/ezgif-frame-${num}.jpg`)
 }
 
 // Cinematic constant: source frames are 16:9 ratio
@@ -39,6 +45,9 @@ export function CinematicCanvas() {
   // State for loaded images (Map for O(1) lookup, no re-renders)
   const [images, setImages] = useState<Map<number, HTMLImageElement>>(new Map())
   const [initialized, setInitialized] = useState(false)
+  // Flips true once every frame request has settled (loaded OR failed), so the
+  // ScrollTrigger machinery is initialised even if some frames never arrive.
+  const [settled, setSettled] = useState(false)
 
   // ==================== CANVAS & DPI ====================
   const dprRef = useRef(Math.min(window.devicePixelRatio || 1, 2))
@@ -85,39 +94,39 @@ export function CinematicCanvas() {
     const total = allFrames.length
     const imagesMap = new Map<number, HTMLImageElement>()
 
-    // Immediately add Frame 0 on mount - no blank canvas
-    const img0 = new Image()
-    img0.src = allFrames[0]
-    img0.onload = () => {
-      imagesMap.set(0, img0)
-      loaded++
-      maybeFinish()
-    }
-    img0.onerror = () => {
-      imagesMap.set(0, {} as HTMLImageElement)
+    // A frame that fails to load must never enter the map: renderFrame() can
+    // then skip it and keep the last successfully painted frame on screen.
+    // (An earlier version stored a bare object as an error placeholder, which
+    // was then handed to drawImage and threw "The provided image value is
+    // invalid" on every scroll update.) Each handler below therefore only
+    // counts the request as SETTLED - success also stores the image.
+    function settleImage(index: number, img: HTMLImageElement | null) {
+      if (img) imagesMap.set(index, img)
       loaded++
       maybeFinish()
     }
 
+    // Immediately add Frame 0 on mount - no blank canvas. noUncheckedIndexedAccess
+    // marks array indexes `string | undefined`; an empty-string src can never
+    // happen here (index 0 of a fixed 183-entry list) but the guard keeps the
+    // strict check honest without changing behaviour.
+    const img0 = new Image()
+    img0.src = allFrames[0] ?? ''
+    img0.onload = () => settleImage(0, img0)
+    img0.onerror = () => settleImage(0, null)
+
     // Preload remaining frames progressively
     for (let i = 1; i < total; i++) {
       const img = new Image()
-      img.src = allFrames[i]
-      img.onload = () => {
-        imagesMap.set(i, img)
-        loaded++
-        maybeFinish()
-      }
-      img.onerror = () => {
-        imagesMap.set(i, {} as HTMLImageElement)
-        loaded++
-        maybeFinish()
-      }
+      img.src = allFrames[i] ?? ''
+      img.onload = () => settleImage(i, img)
+      img.onerror = () => settleImage(i, null)
     }
 
     function maybeFinish() {
       if (loaded === total) {
         setImages(imagesMap)
+        setSettled(true)
       }
     }
   }, [initialized])
@@ -155,12 +164,17 @@ export function CinematicCanvas() {
 
   // ==================== INITIALIZE SCROLLTRIGGER WITH 16:9 TUNING ====================
   useEffect(() => {
-    if (!initialized || images.size === 0) return
+    if (!initialized || !settled) return
 
+    // Frame 001 may have failed to load (e.g. an asset is genuinely missing on
+    // the server). Do not bail out of the whole cinematic in that case: the
+    // trigger, box sizing and progress bus still work, and renderFrame simply
+    // has no image to paint yet. syncCanvasSize() below is written to cope
+    // with img0 being absent.
     const img0 = images.get(0)
-    if (!img0) return
 
     const canvas = canvasRef.current
+    if (!canvas) return
 
     // === BOX OWNERSHIP ===
     // The box is the viewport, in explicit px. Never a percentage: see the note
@@ -261,7 +275,11 @@ export function CinematicCanvas() {
       // resample 183 frames for no extra detail.
       let bufW = Math.round(boxW * dpr)
       let bufH = Math.round(boxH * dpr)
-      const cap = Math.min(1, img0.width / bufW, img0.height / bufH)
+      // Frame 001 may be missing on the server; without a loaded image there
+      // is no native resolution to cap against, so fall back to uncapped DPR.
+      const srcW = img0?.naturalWidth ?? 0
+      const srcH = img0?.naturalHeight ?? 0
+      const cap = srcW > 0 && srcH > 0 ? Math.min(1, srcW / bufW, srcH / bufH) : 1
       bufW = Math.max(1, Math.round(bufW * cap))
       bufH = Math.max(1, Math.round(bufH * cap))
 
@@ -296,7 +314,14 @@ export function CinematicCanvas() {
     // wrong scroll position.
     const endVal = () => `+=${window.innerHeight * 6}`
 
-    new ScrollTrigger({
+    // Hold the trigger so the cleanup can kill it on unmount. Without this,
+    // React StrictMode's double mount in dev leaves TWO trigger objects and
+    // two pin-spacers around one canvas, and the pin-spacer ScrollTrigger
+    // wraps around the canvas is the wrapper React then fails to remove the
+    // canvas from on unmount ("Failed to execute 'removeChild' on 'Node'").
+    // Killing the trigger reverts the pin and detaches the pin-spacer, which
+    // keeps React's own unmount path valid.
+    let trigger: ScrollTrigger | null = new ScrollTrigger({
       trigger: canvas,
       start: 'top top',
       end: endVal,
@@ -360,7 +385,16 @@ export function CinematicCanvas() {
     // frame 0 at progress 0, so without this the canvas stays transparent until
     // the first scroll that advances the index.
     renderFrame(0, true)
-  }, [initialized, images.size])
+
+    return () => {
+      // kill() reverts the pin: the pin-spacer is removed and the canvas is
+      // restored as a direct child of the React root, exactly the state React
+      // created it in. No direct DOM removal happens here - GSAP owns the
+      // wrapper it made, and React keeps owning its own tree.
+      trigger?.kill()
+      trigger = null
+    }
+  }, [initialized, settled])
 
   // ==================== RENDER FRAME WITH BLANK PREVENTION & 16:9 COMPOSITION ====================
   // force = repaint even when the index is unchanged. Required after a canvas
@@ -384,8 +418,17 @@ export function CinematicCanvas() {
       return
     }
 
-    const img = images.get(targetFrame)!
-    if (!img) return
+    // Only draw a frame that actually loaded and fully decoded. Failed
+    // requests never enter the map, and the completeness/naturalWidth check
+    // also covers an image whose decode has not finished: skipping the draw
+    // keeps the LAST VALID FRAME on screen, which is exactly the fallback the
+    // animation contract calls for. A bare object entry can therefore never
+    // reach drawImage again - the "provided image value is invalid" crash is
+    // structurally impossible now.
+    const img = images.get(targetFrame)
+    if (!img || !img.complete || !img.naturalWidth || !img.naturalHeight) {
+      return
+    }
 
     const canvas = canvasRef.current
     const ctx = canvas.getContext('2d')

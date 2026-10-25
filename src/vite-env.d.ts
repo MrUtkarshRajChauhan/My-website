@@ -4,7 +4,9 @@
  * Vite client types.
  *
  * The project keeps its runtime imagery in public/ and references it by
- * absolute URL, so no asset module declarations were needed before. The Work
+ * base-relative URLs (import.meta.env.BASE_URL, see src/fonts.ts and the
+ * frame path building in CinematicCanvas.tsx), so no extra asset module
+ * declarations were needed before. The Work
  * section's background lives in the project-root assets/ folder, which Vite
  * does NOT serve, so it must be imported through the bundler — and that import
  * needs Vite's `*.png` module typing. This one reference supplies it (plus the

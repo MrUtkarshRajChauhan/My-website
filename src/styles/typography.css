@@ -4,12 +4,18 @@
    Font: Clash Display — Indian Type Foundry, supplied in
    ClashDisplay_Complete\Fonts\WEB\fonts\. Licence: FFL.txt (see that file).
 
+   The @font-face rule for ClashDisplay lives in src\fonts.ts, which registers
+   it at runtime with a Vite base-relative URL (import.meta.env.BASE_URL).
+   A CSS url() cannot express that: relative paths re-resolve to the
+   stylesheet's location in the build output and absolute paths pin to the
+   domain root and 404 under the /My-website/ GitHub Pages subpath.
+
    WHAT IS DECLARED, AND WHY
    The supplied family covers weights 200–700 via a single variable woff2
-   (ClashDisplay-Variable.woff2, 29 KB). That one file is used here as the
-   webfont instead of the six static cuts, because it covers the entire
-   200–700 range the design needs without shipping ~97 KB of static files,
-   and without any risk of a browser resolving a weight to the wrong cut.
+   (ClashDisplay-Variable.woff2, 29 KB). That one file is used as the webfont
+   instead of the six static cuts, because it covers the entire 200–700 range
+   the design needs without shipping ~97 KB of static files, and without any
+   risk of a browser resolving a weight to the wrong cut.
 
    Weights 100 (Thin) and 800/900 do not exist in this family and are
    therefore never referenced anywhere in the stylesheet.
@@ -21,14 +27,6 @@
    ClashDisplay_Complete\Fonts\WEB\fonts\ if a static cut is ever wanted.
    ========================================================================== */
 
-@font-face {
-  font-family: 'ClashDisplay';
-  src: url('/fonts/ClashDisplay-Variable.woff2') format('woff2-variations'),
-    url('/fonts/ClashDisplay-Variable.woff2') format('woff2');
-  font-weight: 200 700;
-  font-style: normal;
-  font-display: swap;
-}
 
 /* --------------------------------------------------------------------------
    TYPE ROLES

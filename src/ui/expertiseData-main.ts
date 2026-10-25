@@ -24,6 +24,14 @@
  * live DOM at runtime, so the SVG connectors can never detach from their tiles.
  */
 
+/*
+ * Resolve a public/ asset against Vite's deploy base. A literal '/brand/...'
+ * path pins to the domain root and 404s under a subpath deploy (GitHub Pages
+ * serves this site at /My-website/); BASE_URL resolves correctly in both dev
+ * and the production build.
+ */
+const pub = (path: string): string => `${import.meta.env.BASE_URL}${path}`
+
 export type ClusterId =
   | 'frontend'
   | 'frameworks'
@@ -62,19 +70,19 @@ export type Category = {
 
 /** The 13 confirmed technologies, each with a genuine local logo asset. */
 export const TECHS: readonly Tech[] = [
-  { id: 'html', name: 'HTML', logo: '/brand/technology/html5.svg', brand: '#e34f26' },
-  { id: 'css', name: 'CSS', logo: '/brand/technology/css3.svg', brand: '#1572b6' },
-  { id: 'javascript', name: 'JavaScript', logo: '/brand/technology/javascript.svg', brand: '#f7df1e' },
-  { id: 'typescript', name: 'TypeScript', logo: '/brand/technology/typescript.svg', brand: '#3178c6' },
-  { id: 'react', name: 'React', logo: '/brand/technology/react.svg', brand: '#61dafb' },
-  { id: 'next', name: 'Next.js', logo: '/brand/technology/nextjs.svg', brand: '#e8edeb' },
-  { id: 'node', name: 'Node.js', logo: '/brand/technology/nodejs.svg', brand: '#5fa04e' },
-  { id: 'mongodb', name: 'MongoDB', logo: '/brand/technology/mongodb.svg', brand: '#47a248' },
-  { id: 'prisma', name: 'Prisma', logo: '/brand/technology/prisma.svg', brand: '#8e9bb3' },
-  { id: 'supabase', name: 'Supabase', logo: '/brand/technology/supabase.svg', brand: '#3ecf8e' },
-  { id: 'vercel', name: 'Vercel', logo: '/brand/technology/vercel.svg', brand: '#e8edeb' },
-  { id: 'figma', name: 'Figma', logo: '/brand/technology/figma.svg', brand: '#f24e1e' },
-  { id: 'seo', name: 'SEO', logo: '/brand/technology/seo.svg', brand: '#50e3a4' },
+  { id: 'html', name: 'HTML', logo: pub('brand/technology/html5.svg'), brand: '#e34f26' },
+  { id: 'css', name: 'CSS', logo: pub('brand/technology/css3.svg'), brand: '#1572b6' },
+  { id: 'javascript', name: 'JavaScript', logo: pub('brand/technology/javascript.svg'), brand: '#f7df1e' },
+  { id: 'typescript', name: 'TypeScript', logo: pub('brand/technology/typescript.svg'), brand: '#3178c6' },
+  { id: 'react', name: 'React', logo: pub('brand/technology/react.svg'), brand: '#61dafb' },
+  { id: 'next', name: 'Next.js', logo: pub('brand/technology/nextjs.svg'), brand: '#e8edeb' },
+  { id: 'node', name: 'Node.js', logo: pub('brand/technology/nodejs.svg'), brand: '#5fa04e' },
+  { id: 'mongodb', name: 'MongoDB', logo: pub('brand/technology/mongodb.svg'), brand: '#47a248' },
+  { id: 'prisma', name: 'Prisma', logo: pub('brand/technology/prisma.svg'), brand: '#8e9bb3' },
+  { id: 'supabase', name: 'Supabase', logo: pub('brand/technology/supabase.svg'), brand: '#3ecf8e' },
+  { id: 'vercel', name: 'Vercel', logo: pub('brand/technology/vercel.svg'), brand: '#e8edeb' },
+  { id: 'figma', name: 'Figma', logo: pub('brand/technology/figma.svg'), brand: '#f24e1e' },
+  { id: 'seo', name: 'SEO', logo: pub('brand/technology/seo.svg'), brand: '#50e3a4' },
 ] as const
 
 export const TECH_MAP: Record<string, Tech> = Object.fromEntries(

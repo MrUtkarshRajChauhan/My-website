@@ -3,6 +3,10 @@ import { createRoot } from 'react-dom/client'
 import { App } from './App'
 import { initSmoothScroll } from './smoothScroll'
 import { setLenis } from './lenisHandle'
+// Webfonts must be registered before the app's CSS resolves font-family
+// names; the rules live here so their URLs are Vite-base-relative (see
+// fonts.ts). This side-effect import is idempotent.
+import './fonts'
 import './index.css'
 
 const rootElement = document.getElementById('root')

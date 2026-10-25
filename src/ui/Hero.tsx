@@ -495,11 +495,19 @@ export function Hero() {
             away from the indicator as the viewport grew taller. */}
         <div className="hero__lower">
           <div className="hero__trust" ref={trustRef}>
+            {/* The four avatar source files (public/avatars/avatar-01..04.jpg)
+                do not exist anywhere in this repository - they were referenced
+                with domain-root URLs and 404'd on every deploy. No source or
+                git-history copy of the images exists, so requesting them is
+                removed rather than guessed at a wrong path. The styled chip
+                circles themselves are kept exactly as designed: their border
+                and raised background (hero.css .hero__avatar) render whether
+                or not an image is inside. */}
             <div className="hero__avatars">
-              <span className="hero__avatar"><img src="/avatars/avatar-01.jpg" alt="" aria-hidden="true" /></span>
-              <span className="hero__avatar"><img src="/avatars/avatar-02.jpg" alt="" aria-hidden="true" /></span>
-              <span className="hero__avatar"><img src="/avatars/avatar-03.jpg" alt="" aria-hidden="true" /></span>
-              <span className="hero__avatar"><img src="/avatars/avatar-04.jpg" alt="" aria-hidden="true" /></span>
+              <span className="hero__avatar" aria-hidden="true" />
+              <span className="hero__avatar" aria-hidden="true" />
+              <span className="hero__avatar" aria-hidden="true" />
+              <span className="hero__avatar" aria-hidden="true" />
             </div>
             <div className="hero__trust-text">
               <div className="hero__trust-title">Trusted by businesses</div>
@@ -527,7 +535,7 @@ export function Hero() {
           <img
             className="hero__signature"
             ref={signatureRef}
-            src="/brand/signature.svg"
+            src={`${import.meta.env.BASE_URL}brand/signature.svg`}
             alt=""
             aria-hidden="true"
           />

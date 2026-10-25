@@ -612,10 +612,13 @@ export function Navbar() {
           aria-label="Sarin — home"
         >
           {/* Frame is sized to the visible mark; the PNG is scaled up inside
-              it and clipped, because the file carries a wide empty margin. */}
+              it and clipped, because the file carries a wide empty margin.
+              The src is built from Vite's base URL: a literal '/brand/...'
+              path would pin to the domain root and 404 under the /My-website/
+              GitHub Pages subpath. */}
           <span className="navbar__monogram-frame">
             <img
-              src="/brand/monogram.png"
+              src={`${import.meta.env.BASE_URL}brand/monogram.png`}
               alt=""
               width={1536}
               height={1024}
