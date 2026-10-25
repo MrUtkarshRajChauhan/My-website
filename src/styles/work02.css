@@ -1,0 +1,567 @@
+/* ==========================================================================
+   WORK 02 — CLIENT PERSPECTIVE (the testimonial chapter)
+   --------------------------------------------------------------------------
+   The SECOND normal-flow Work section, placed immediately after `.work` and
+   before the fixed UI layer. Like `.work` it paints NO background of its own:
+   the one persistent fixed layer (`.static-background`) already sits behind it,
+   so the same stationary asset serves both sections as they scroll past and
+   neither can drift, fade or crossfade against a duplicate copy.
+
+   STACKING
+   --z-content (3), the same band as `.work`, and later in document order, so it
+   paints over the fixed background and under the fixed UI layer, whose navbar
+   shares the value but comes later still.
+
+   GEOMETRY (targets quoted against the SECTION box, per the design)
+     portrait stack   left 8%   top 32%   width 45%   bottom 85%
+     testimonial card left 57%  top 33%   width 37%   height 46%
+   The two visual columns are absolutely positioned DIRECT CHILDREN of the
+   section, exactly the way Work 01's rail/scroll cue are direct children of
+   `.work`: it is what lets each percentage be quoted directly in section
+   coordinates rather than in some intermediate wrapper's. The upper row is the
+   one normal-flow child, so the header can never be overlapped by the absolute
+   columns, which begin at 32% — comfortably below the header's ~29% footprint.
+   ========================================================================== */
+
+.work02 {
+  position: relative;
+  z-index: var(--z-content);
+  isolation: isolate;
+
+  width: 100%;
+  min-height: 100vh;
+  min-height: 100svh;
+
+  /* No background of its own — see the header note. Transparent so the
+     approved `.static-background` asset shows through completely unaltered. */
+  background-color: transparent;
+
+  /* Clip any overflow to the section box; a normal-flow clip on this element
+     only, so it cannot affect the fixed canvas, background or UI layer. */
+  overflow: hidden;
+}
+
+/* The upper row. Only flow content lives here; the header's own padding is the
+   section's top breathing room, and the large top inset is what puts the
+   headline in the upper third with the visual columns starting beneath it. */
+.work02__inner {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  padding-block: clamp(3.5rem, 9vh, 8rem) 0;
+  /* 8% left aligns the eyebrow with the portrait stack below it; 6% right is
+     the design's own asymmetric edge (the panel reaches 94%). */
+  padding-inline: 8% 6%;
+}
+
+.work02__head {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  column-gap: clamp(1.5rem, 3vw, 3.25rem);
+  align-items: start;
+}
+
+/* EYEBROW — "02 — CLIENT PERSPECTIVE", the same mark/divider language as the
+   Work 01 eyebrow so the two sections read as one editorial system. */
+.work02__eyebrow {
+  display: flex;
+  align-items: center;
+  gap: clamp(0.75rem, 0.9vw, 1.125rem);
+  margin: 0;
+  font-family: var(--font-ui);
+  font-size: clamp(0.875rem, 0.85vw, 1.0625rem); /* 14-17px */
+  font-weight: 500;
+  line-height: 1;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: var(--color-ink-muted);
+}
+
+.work02__eyebrow-line {
+  display: block;
+  width: clamp(3rem, 7vw, 9rem);
+  height: 1px;
+  background-color: color-mix(in srgb, var(--color-accent) 70%, transparent);
+  transform: translateY(0.5px);
+}
+
+.work02__eyebrow-text {
+  white-space: nowrap;
+}
+
+/* HEADLINE — the editorial serif already used by Work 01's headline, with only
+   "Businesses." in the mint accent. */
+.work02__title {
+  display: flex;
+  flex-direction: column;
+  margin: clamp(1.75rem, 3.2vh, 2.75rem) 0 0;
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: clamp(2.8rem, 4.3vw, 5rem);
+  font-weight: 400;
+  line-height: 1.02;
+  letter-spacing: -0.02em;
+  color: var(--color-ink-ivory);
+}
+
+.work02__title-line {
+  display: block;
+}
+
+.work02__title-accent {
+  color: var(--color-accent);
+}
+
+/* SUPPORTING COPY — to the right of the headline, behind a thin vertical
+   divider. Kept narrow (34ch) and modest in size so the headline stays the
+   dominant element; the rule is a real border, not a decorative pseudo. */
+.work02__support {
+  max-width: 34ch;
+  padding-left: clamp(1.25rem, 2.2vw, 2.5rem);
+  border-left: 1px solid var(--color-line-muted);
+}
+
+.work02__support-lead,
+.work02__support-note {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: clamp(0.9375rem, 1vw, 1.125rem);
+  line-height: 1.55;
+}
+
+.work02__support-lead {
+  color: var(--color-ink-soft);
+}
+
+.work02__support-note {
+  margin-top: clamp(0.4rem, 0.8vh, 0.75rem);
+  color: var(--color-ink-muted);
+}
+
+/* SLIDE COUNTER — far right of the upper row, with this section's own local
+   rule immediately above it, right-aligned to the counter. */
+.work02__counter {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: clamp(0.6rem, 1vh, 0.9rem);
+}
+
+.work02__counter-rule {
+  display: block;
+  width: clamp(4rem, 7vw, 9rem);
+  height: 1px;
+  background-color: var(--color-line-strong);
+}
+
+.work02__counter-value {
+  font-family: var(--font-mono);
+  font-size: clamp(0.75rem, 0.85vw, 0.9375rem);
+  letter-spacing: 0.1em;
+  font-variant-numeric: tabular-nums;
+  color: var(--color-ink-muted);
+}
+
+/* --------------------------------------------------------------------------
+   LEFT VISUAL — the portrait-card stack (PLACEHOLDER STATE)
+
+   The supplied composite does not exist in this project, so this box reserves
+   the real artwork's geometry and stands in with three abstract panels. The
+   `--work02-portrait-*` values are placeholder-ONLY stand-ins for the missing
+   photograph's own colour temperature; they are not part of the UI palette and
+   are removed along with the placeholder when the asset lands.
+   -------------------------------------------------------------------------- */
+.work02__portrait {
+  --work02-portrait-amber-deep: #2a1a0e;
+  --work02-portrait-amber: #6b4a2a;
+  --work02-portrait-blue-deep: #0d1723;
+  --work02-portrait-blue: #2c4763;
+  --work02-portrait-centre-deep: #101a16;
+  --work02-portrait-centre: #1b2a24;
+
+  position: absolute;
+  left: 8%;
+  top: 32%;
+  width: 45%;
+  height: 53%; /* -> bottom 85% of the section */
+  z-index: 0;
+  pointer-events: none;
+}
+
+.work02__portrait-card {
+  position: absolute;
+  border-radius: clamp(0.6rem, 1vw, 1.1rem);
+  box-shadow: 0 18px 40px rgb(0 0 0 / 45%);
+}
+
+/* Warm, amber-lit rear-left card. */
+.work02__portrait-card--rear-left {
+  left: 0;
+  top: 12%;
+  width: 58%;
+  height: 76%;
+  background: linear-gradient(
+    155deg,
+    var(--work02-portrait-amber),
+    var(--work02-portrait-amber-deep)
+  );
+  transform: rotate(-6deg);
+}
+
+/* Cool, blue-toned rear-right card. */
+.work02__portrait-card--rear-right {
+  right: 0;
+  top: 4%;
+  width: 54%;
+  height: 72%;
+  background: linear-gradient(
+    200deg,
+    var(--work02-portrait-blue),
+    var(--work02-portrait-blue-deep)
+  );
+  transform: rotate(5deg);
+}
+
+/* Large central card with the thin ivory border. */
+.work02__portrait-card--front {
+  left: 50%;
+  top: 50%;
+  width: 60%;
+  height: 84%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(0.85rem, 1.6vw, 1.5rem);
+  text-align: center;
+  background: linear-gradient(
+    180deg,
+    var(--work02-portrait-centre),
+    var(--work02-portrait-centre-deep)
+  );
+  border: 1px solid color-mix(in srgb, var(--color-ink-ivory) 42%, transparent);
+  box-shadow: 0 26px 60px rgb(0 0 0 / 55%);
+}
+
+.work02__portrait-note {
+  font-family: var(--font-ui);
+  font-size: clamp(0.625rem, 0.72vw, 0.8125rem);
+  font-weight: 500;
+  line-height: 1.4;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: color-mix(in srgb, var(--color-ink-ivory) 58%, transparent);
+}
+
+/* --------------------------------------------------------------------------
+   RIGHT VISUAL — the testimonial glass panel
+
+   A dark translucent fill + a fine low-contrast outline + a restrained shadow,
+   which is what lets the approved background read through the card softened but
+   unaltered. Deliberately NO panel gradient and no oversized outer glow, so
+   nothing competes with the background treatment already in place.
+   -------------------------------------------------------------------------- */
+.work02__panel {
+  /* One source of truth for the circular control's footprint, shared by the
+     buttons themselves and by the foot's reserved padding. */
+  --work02-ctl-size: clamp(2.25rem, 2.7vw, 2.75rem);
+  --work02-ctl-gap: clamp(0.4rem, 0.7vw, 0.65rem);
+
+  position: absolute;
+  left: 57%;
+  top: 33%;
+  width: 37%;
+  height: 46%;
+  z-index: 2; /* above the flow header (1) and the portrait stack (0) */
+
+  display: flex;
+  flex-direction: column;
+  padding: clamp(20px, 2.3vw, 36px);
+  border-radius: clamp(0.9rem, 1.4vw, 1.5rem);
+  /* Same emerald glass family as the Contact panels. */
+  border: 1px solid var(--color-line-emerald);
+  background-color: var(--color-surface-glass);
+  box-shadow: 0 24px 60px rgb(0 0 0 / 35%);
+  overflow: hidden;
+}
+
+.work02__panel-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: clamp(0.5rem, 0.7vw, 0.75rem);
+  margin: 0;
+  font-family: var(--font-ui);
+  font-size: var(--text-eyebrow);
+  font-weight: 500;
+  line-height: 1;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--color-ink-muted);
+}
+
+.work02__panel-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  /* LIVE CORE — vivid true-green LED (#00E676), deliberately distinct from the
+     site's Emerald Noir theme green, matching the Home badge and Contact
+     email dots. Size unchanged. */
+  background-color: #00e676;
+  /* LIVE SIGNAL — the Client Testimonial eyebrow dot is the same small status
+     language as the Home badge dot, so it rides the one shared Emerald Noir
+     bloom pulse (see globals.css) on the 2.4s cycle. Opacity and shadow
+     intensity only: the dot never moves, scales or reflows. */
+  animation: status-dot-live 2.4s ease-in-out infinite;
+}
+
+/* Reduced motion: withdraw the pulse; keep the green LED core and a restrained
+   static bloom. */
+@media (prefers-reduced-motion: reduce) {
+  .work02__panel-dot {
+    animation: none;
+    box-shadow:
+      0 0 3px 1px rgba(57, 255, 20, 0.25),
+      0 0 7px 3px rgba(57, 255, 20, 0.12);
+  }
+}
+
+.work02__panel-quote {
+  display: block;
+  margin-top: clamp(0.4rem, 0.9vw, 0.75rem);
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: clamp(2.5rem, 3.2vw, 3.75rem);
+  line-height: 0.75;
+  color: color-mix(in srgb, var(--color-ink-ivory) 88%, transparent);
+}
+
+/* The swap and the controls are siblings. The swap is the keyed subtree that
+   travels on a slide change; the controls sit outside it and are positioned
+   into the panel's bottom-right corner, so they keep their identity (and any
+   focus) across a change. */
+.work02__panel-flow {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+  margin-top: clamp(0.5rem, 1.2vw, 1rem);
+}
+
+.work02__panel-swap {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.work02__panel-text {
+  margin: 0;
+  font-family: 'Playfair Display', Georgia, serif;
+  font-style: italic;
+  font-size: clamp(1.05rem, 1.35vw, 1.5rem);
+  line-height: 1.45;
+  letter-spacing: -0.005em;
+  color: var(--color-ink-soft);
+}
+
+.work02__panel-text p {
+  margin: 0;
+}
+
+.work02__panel-rule {
+  display: block;
+  height: 1px;
+  margin-top: clamp(0.9rem, 1.8vw, 1.5rem);
+  background-color: var(--color-line-subtle);
+}
+
+.work02__panel-foot {
+  display: flex;
+  align-items: center;
+  gap: clamp(0.75rem, 1.4vw, 1.25rem);
+  margin-top: auto;
+  padding-top: clamp(0.9rem, 1.8vw, 1.5rem);
+  /* Reserve the controls' footprint so a long name/role can never run under
+     them, without the two sharing a keyed subtree. */
+  padding-right: calc(
+    2 * var(--work02-ctl-size) + var(--work02-ctl-gap) +
+      clamp(0.75rem, 1.4vw, 1.25rem)
+  );
+}
+
+.work02__panel-author {
+  display: flex;
+  align-items: center;
+  gap: clamp(0.6rem, 1vw, 0.9rem);
+  min-width: 0;
+}
+
+.work02__panel-avatar {
+  flex: 0 0 auto;
+  width: clamp(2.25rem, 2.9vw, 3rem);
+  height: clamp(2.25rem, 2.9vw, 3rem);
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+/* No verified client photograph exists: an empty frame, never an invented face. */
+.work02__panel-avatar--empty {
+  border: 1px solid var(--color-line-strong);
+  background-color: var(--color-line-subtle);
+}
+
+.work02__panel-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  min-width: 0;
+}
+
+.work02__panel-name {
+  font-family: var(--font-ui);
+  font-size: clamp(0.8125rem, 0.95vw, 0.9375rem);
+  font-weight: 500;
+  line-height: 1.2;
+  color: var(--color-ink-ivory);
+}
+
+.work02__panel-role {
+  font-family: var(--font-body);
+  font-size: clamp(0.75rem, 0.85vw, 0.875rem);
+  line-height: 1.3;
+  color: var(--color-ink-faint);
+}
+
+.work02__panel-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin-top: 0.35rem;
+}
+
+.work02__panel-tag {
+  padding: 0.15rem 0.5rem;
+  border: 1px solid var(--color-line-muted);
+  border-radius: var(--radius-pill);
+  font-family: var(--font-ui);
+  font-size: var(--text-meta);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-ink-muted);
+}
+
+.work02__panel-controls {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  gap: var(--work02-ctl-gap);
+}
+
+.work02__panel-arrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--work02-ctl-size);
+  height: var(--work02-ctl-size);
+  padding: 0;
+  border: 1px solid var(--color-line-muted);
+  border-radius: 50%;
+  background-color: transparent;
+  color: var(--color-ink-soft);
+  cursor: pointer;
+  transition:
+    border-color 200ms ease,
+    color 200ms ease,
+    background-color 200ms ease;
+}
+
+.work02__panel-arrow:hover:not(:disabled) {
+  border-color: var(--color-accent-line);
+  color: var(--color-ink-ivory);
+}
+
+.work02__panel-arrow:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+
+.work02__panel-arrow:disabled {
+  cursor: default;
+  opacity: 0.42;
+}
+
+.work02__panel-arrow-icon {
+  width: clamp(0.9rem, 1.1vw, 1.125rem);
+  height: clamp(0.9rem, 1.1vw, 1.125rem);
+}
+
+/* Slide change — a restrained shift + fade, from the side of travel. No
+   rotation, no scale, no autoplay; the section's own scrubbed entrance is
+   untouched by it. */
+@keyframes work02-slide-next {
+  from {
+    opacity: 0;
+    transform: translateX(12px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes work02-slide-prev {
+  from {
+    opacity: 0;
+    transform: translateX(-12px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.work02__panel-flow[data-dir='next'] .work02__panel-swap {
+  animation: work02-slide-next 320ms ease-out both;
+}
+
+.work02__panel-flow[data-dir='prev'] .work02__panel-swap {
+  animation: work02-slide-prev 320ms ease-out both;
+}
+
+/* --------------------------------------------------------------------------
+   TABLET — the two-column composition still fits, so it is preserved; only the
+   gaps tighten.
+   -------------------------------------------------------------------------- */
+@media (max-width: 1180px) {
+  .work02__head {
+    column-gap: clamp(1.25rem, 2.4vw, 2rem);
+  }
+
+  .work02__support {
+    max-width: 30ch;
+    padding-left: clamp(1rem, 1.8vw, 1.75rem);
+  }
+}
+
+/* --------------------------------------------------------------------------
+   REDUCED MOTION — no reveal translation, no slide shift. The JS transition is
+   skipped entirely when the preference is set; this block is the belt-and-
+   braces guard for a preference that is toggled after load.
+   -------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  .work02__head,
+  .work02__portrait,
+  .work02__panel {
+    transform: none !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+  }
+
+  .work02__panel-swap {
+    animation: none;
+  }
+
+  .work02__panel-arrow {
+    transition: none;
+  }
+}

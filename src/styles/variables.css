@@ -1,0 +1,326 @@
+/* ==========================================================================
+   DESIGN TOKENS — single source of truth
+   --------------------------------------------------------------------------
+   Nothing in this file paints. It only declares values so that later steps
+   (navigation, hero, editorial sections) can be built without inventing
+   colours, spacing or z-index numbers at the point of use.
+
+   Scope note: this foundation is DESKTOP-FIRST and assumes a 16:9 stage
+   (1920x1080 down to 1280x720). Scalable units (rem / vw / clamp) are used
+   so the same declarations hold across that range. Mobile/tablet layouts
+   are explicitly out of scope for this step.
+   ========================================================================== */
+
+:root {
+  /* ---------------------------------------------------------------------
+     COLOUR — EMERALD NOIR
+     --------------------------------------------------------------------------
+     Deep black-green grounds, a restrained emerald second tier, a single
+     bright mint reserved for emphasis and interaction, and warm ivory ink.
+     Values sit consistently against the existing fixed dark cinematic
+     treatment (see cinematic-overlay in index.css).
+
+     PROPORTION (art direction, not a DOM budget): the deep grounds and
+     neutral surfaces carry the bulk of the page, emerald is the middle
+     tier (glass panels, selected outlines), and the mint is deliberately
+     scarce — headline emphasis, primary buttons, active navigation, the
+     navbar progress fill and bead, and small section indicators.
+
+     The six identity values are #020a09, #011611, #043d28, #00a878,
+     #50e3a4 and #f2f0e8. Everything else below is a supporting neutral or
+     line treatment derived from them.
+     --------------------------------------------------------------------- */
+
+  /* Page / surface — the two deep grounds */
+  --color-bg-deep: #020a09;
+  --color-bg-base: #011611;
+
+  /* Raised surface — one step above the base, still firmly dark */
+  --color-bg-raised: #06221a;
+
+  /* Emerald lighting — the restrained second tier */
+  --color-emerald-deep: #043d28;
+  --color-accent-deep: #00a878;
+
+  /* Ink — warm ivory primary, gray-green muted ramp.
+     The ramp is measured, not eyeballed. Every step clears WCAG 2.2 AA for
+     normal text against BOTH the deep grounds and the emerald glass
+     (--color-surface-glass) that the Contact and testimonial panels use,
+     because the two muted steps carry the small navigation labels, the
+     section descriptions and the social-row supporting copy.
+     Measured on the real frame behind the glass (see report): soft 12.4:1,
+     muted 7.3:1, faint 5.7:1. The faint step is deliberately no darker than
+     this — at the original #6b7f75 it measured 3.9:1 over the glass. */
+  --color-ink-ivory: #f2f0e8;
+  --color-ink-soft: #d3dbd4;
+  --color-ink-muted: #a9b8b0;
+  --color-ink-faint: #94a89d;
+
+  /* Accent — single mint used sparingly for emphasis and focus */
+  --color-accent: #50e3a4;
+  --color-accent-ink: #020a09;
+  --color-accent-soft: rgb(80 227 164 / 14%);
+  --color-accent-line: rgb(80 227 164 / 38%);
+
+  /* ABOUT-LOCAL accent — a brighter turquoise-green (#00E6BC) reserved for the
+     About composition only (heading emphasis, the About progress rail's active
+     light and the left ABOUT marker). Deliberately a separate token so the
+     global mint above stays untouched for Home, Expertise, Work and Contact,
+     and so the live-status LED keeps its own distinct colour. */
+  --color-about-accent: #00e6bc;
+
+  /* SURFACE / LINE TREATMENTS — the two Emerald Noir tiers, named so no
+     component has to invent a mint percentage again:
+       surface-glass  the emerald-tinted translucent fill shared by the
+                      site's existing glass panels (email, social,
+                      testimonial). It is --color-emerald-deep blended toward
+                      the deep ground, then held at the depth those panels
+                      already used. Pure emerald-deep was tried first and
+                      rejected on measurement: it is about as bright as the
+                      artwork behind it, so the panel stopped being a dark
+                      surface and the row copy fell to 3.9:1. Blending toward
+                      #020a09 keeps the emerald undertone while keeping the
+                      glass genuinely dark.
+       line-emerald   the outline for panel and selected states. It is
+                      --color-accent-deep at 30%: clearly emerald, not neon,
+                      which keeps the bright --color-accent-line free for
+                      genuinely active states. */
+  --color-surface-glass: rgb(3 42 29 / 66%);
+  --color-line-emerald: rgb(0 168 120 / 30%);
+
+  /* Borders — neutral ivory hairlines at three weights */
+  --color-line-subtle: rgb(242 240 232 / 8%);
+  --color-line-muted: rgb(242 240 232 / 14%);
+  --color-line-strong: rgb(242 240 232 / 24%);
+
+  /* Overlay scrim — mirrors the fixed cinematic tint so UI and film agree.
+     Deliberately NOT retuned to the new grounds: this value is the measured
+     colour of the protected cinematic overlay's multiply layer, and keeping
+     it identical is what stops the UI scrim and the film from drifting
+     apart. */
+  --color-scrim: rgb(3 5 9 / 24%);
+  --color-scrim-heavy: rgb(3 5 9 / 64%);
+
+  /* ---------------------------------------------------------------------
+     Z-INDEX / STACKING SYSTEM
+     --------------------------------------------------------------------------
+     A deliberate, centralised scale. New layers must be added here rather
+     than with an inline or ad-hoc number, so the whole document order stays
+     predictable over the fixed cinematic canvas.
+
+       0  page      — opaque page background, the fallback behind the film
+       1  canvas    — the frame engine (CinematicCanvas), 16:9 stage
+       2  overlay   — existing fixed dark/vignette cinematic treatment
+       3  content   — post-film page content (the Work section). Deliberately
+                       the same value as ui: the UI layer is later in document
+                       order, so the fixed navbar still sits above Work.
+       3  ui        — future portfolio UI (nav, hero, editorial content)
+       4  interactive— future focus rings, menus, anything that must sit
+                       above the rest of the UI layer and stay clickable
+     --------------------------------------------------------------------- */
+  --z-page: 0;
+  --z-canvas: 1;
+  --z-cinematic-overlay: 2;
+  --z-content: 3;
+  --z-ui: 3;
+  /* Closing statement "Enough talk. / See the work.": same band as content/ui, but it sits
+     EARLIER in document order than Work, so normal-flow Work rises and covers it
+     while the UI layer (later still) keeps the navbar above both. It stays above
+     the canvas (1) and the cinematic overlay (2) so it reads over frame 183. */
+  --z-cinematic-transition: 3;
+  --z-interactive: 4;
+
+  /* ---------------------------------------------------------------------
+     SPACING — 4px base rhythm, scaled up for a wide cinematic stage.
+     --------------------------------------------------------------------- */
+  --space-3xs: 0.25rem;
+  --space-2xs: 0.5rem;
+  --space-xs: 0.75rem;
+  --space-sm: 1rem;
+  --space-md: 1.5rem;
+  --space-lg: 2rem;
+  --space-xl: 3rem;
+  --space-2xl: 4rem;
+  --space-3xl: 6rem;
+  --space-4xl: 8rem;
+
+  /* Safe area between the frame edge and any future UI edge */
+  --frame-gutter: clamp(1.5rem, 3.5vw, 3.5rem);
+  --frame-inset: clamp(1rem, 2vw, 2rem);
+
+  /* ---------------------------------------------------------------------
+     TYPOGRAPHY
+     --------------------------------------------------------------------------
+     Clash Display is the supplied family (Indian Type Foundry). It is a
+     display face; body copy therefore uses a neutral system stack so long
+     paragraphs stay readable, and technical metadata uses the mono stack.
+     No weight is declared that the shipped font files cannot provide.
+     --------------------------------------------------------------------- */
+  --font-display: 'ClashDisplay', system-ui, -apple-system, 'Segoe UI',
+    sans-serif;
+  --font-ui: 'ClashDisplay', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-body: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial,
+    sans-serif;
+  --font-mono: ui-monospace, 'Cascadia Mono', Consolas, 'SF Mono', Menlo,
+    monospace;
+
+  /* Type scale — fluid across the 1280–1920 desktop 16:9 range */
+  --text-display: clamp(3.5rem, 7.5vw, 8rem);
+  --text-title: clamp(2.25rem, 4.2vw, 4rem);
+  --text-heading: clamp(1.5rem, 2.4vw, 2.25rem);
+  --text-subheading: clamp(1.25rem, 1.7vw, 1.5rem);
+  --text-body-lg: clamp(1.125rem, 1.35vw, 1.375rem);
+  --text-body: clamp(1rem, 1.1vw, 1.125rem);
+  --text-nav: clamp(0.875rem, 1vw, 1rem);
+  --text-eyebrow: clamp(0.75rem, 0.8vw, 0.8125rem);
+  --text-button: clamp(0.875rem, 0.95vw, 0.9375rem);
+  --text-meta: clamp(0.6875rem, 0.75vw, 0.75rem);
+
+  /* Line heights */
+  --leading-display: 0.92;
+  --leading-heading: 1.08;
+  --leading-body: 1.6;
+  --leading-tight: 1.3;
+
+  /* Letter spacing */
+  --tracking-display: -0.03em;
+  --tracking-heading: -0.015em;
+  --tracking-body: 0;
+  --tracking-eyebrow: 0.18em;
+  --tracking-meta: 0.08em;
+  --tracking-nav: 0.02em;
+
+  /* ---------------------------------------------------------------------
+     SHAPE / FOCUS
+     --------------------------------------------------------------------- */
+  --radius-sm: 2px;
+  --radius-md: 4px;
+  --radius-pill: 999px;
+  --focus-ring: 0 0 0 1px var(--color-bg-deep),
+    0 0 0 3px var(--color-accent);
+
+  /* ---------------------------------------------------------------------
+     NAVBAR (Step 2 — opaque band)
+     --------------------------------------------------------------------------
+     Every navbar dimension is expressed in --navbar-u, a scale unit that
+     equals exactly 1px at a 1920px-wide viewport and shrinks proportionally
+     below that, with a floor so the small caps stay legible at 1280. Because
+     all supported viewports are 16:9, the same unit also governs vertical
+     measures, so one token scales the whole composition as a unit rather
+     than letting each part drift independently.
+
+       --navbar-u = 1px @1920, 0.85px @1280 (floor)
+
+     The bar is a full-bleed OPAQUE band pinned to the top of the viewport,
+     not a floating rule, because the cinematic underneath is a full-bleed
+     pinned canvas: with a transparent bar the film showed straight through
+     the one region that has to read as chrome, and the subject's head
+     collided with the labels. The band paints at --z-ui over both the canvas
+     and the cinematic overlay, so nothing underneath can bleed through.
+
+      Its height is 66u — inside the 60-72px window @1920 — and is the single
+      vertical source of truth: the inner row centres its three regions on the
+      band's own axis, so no region carries a hand-tuned top offset and nothing
+      can drift out of the band.
+
+      The band itself carries NO rule, border or divider. An earlier iteration
+      terminated the plate with a full-bleed 1px bottom rule, which read as a
+      container border around the whole navbar and made the small local HOME
+      indicator read as part of a navbar-wide underline treatment. The band's
+      edge is now defined by the contrast between the plate and the film below
+      it, and the only line in the navbar is the active item's own indicator.
+
+      The edge insets stay deliberately asymmetric (monogram 120u from the left
+      edge, CTA 100u from the right, per the design target) but they now
+      describe the INNER ROW's padding, not the band's, because the band itself
+      must reach both edges of the viewport.
+      --------------------------------------------------------------------- */
+
+  --navbar-u: clamp(0.85px, 0.05208vw, 1px);
+
+  /* BAND ------------------------------------------------------------------
+     Height 58-60px target @1920. The plate colour is the deep ground at a
+     low alpha rather than a second, independently chosen near-black, so the
+     chrome always tracks the page background exactly. */
+  --navbar-band-h: clamp(58px, calc(60 * var(--navbar-u)), 60px);
+  --navbar-band-bg: color-mix(in srgb, var(--color-bg-deep) 10%, transparent);
+
+  /* Monogram 32px from left, CTA 24px from right at 1920px width */
+  --navbar-gutter-l: calc(80 * var(--navbar-u));
+  --navbar-gutter-r: calc(24 * var(--navbar-u));
+
+  /* MONOGRAM ------------------------------------------------------------
+     24-28px target */
+  --navbar-mark-w: calc(26 * var(--navbar-u));
+
+  /* public/brand/monogram.png is 1536x1024, but its inked mark occupies only
+     x=541..994 and y=310..690 - 29.6% of the file width. Laying the <img> out
+     at the mark size would therefore show roughly a third of the intended
+     artwork, so the image is scaled up and the frame crops it back down:
+       --monogram-mark-h-ratio   mark height as a fraction of mark width
+                                 (381 / 454 = 0.8392)
+       --monogram-canvas-scale   how much wider the PNG box must be than the
+                                 mark for its ink to fill the frame
+                                 (1536 / 454 = 3.383)
+     The frame also crops the alpha 1-7 noise the PNG carries outside its ink
+     bounds. The global reset sets `img { max-width: 100% }`, which would clamp
+     the scaled-up box back to the frame width and collapse the mark to about
+     a third of its size, so navbar.css cancels it for this image only. */
+  --monogram-mark-h-ratio: 0.8392;
+  --monogram-canvas-scale: 3.383;
+
+  /* NAVIGATION ----------------------------------------------------------
+     10px target at 1920, uppercase, ~1.5-2px tracking */
+  --navbar-text: clamp(10px, 0.52vw, 10px);
+  --navbar-tracking: 0.15em;
+  --navbar-ink-idle: color-mix(in srgb, var(--color-ink-ivory) 82%, transparent);
+  --navbar-ink-hover: color-mix(in srgb, var(--color-ink-ivory) 88%, transparent);
+  --navbar-ink-active: color-mix(
+    in srgb,
+    var(--color-ink-ivory) 92%,
+    transparent
+  );
+
+  /* Spacing ~35-45px */
+  --nav-gap: calc(40 * var(--navbar-u));
+  --nav-hit-slop: calc(4 * var(--navbar-u));
+
+  /* NAVBAR RULE + HOME ACTIVE DOT -----------------------------------------
+     Local HOME indicator: short line + centred dot, ~8-12px below text */
+  --navbar-rule-drop: calc(10 * var(--navbar-u));
+  --navbar-rule-line: color-mix(
+    in srgb,
+    var(--color-ink-ivory) 22%,
+    transparent
+  );
+  --navbar-active-dot: calc(4 * var(--navbar-u));
+  --navbar-active-dot-ink: color-mix(
+    in srgb,
+    var(--color-ink-ivory) 92%,
+    transparent
+  );
+
+  /* LET'S TALK -----------------------------------------------------------
+     130x44px target at 1920 */
+  --navbar-cta-w: calc(130 * var(--navbar-u));
+  --navbar-cta-h: calc(44 * var(--navbar-u));
+  --navbar-cta-radius: calc(22 * var(--navbar-u));
+  --navbar-cta-border: color-mix(
+    in srgb,
+    var(--color-ink-ivory) 55%,
+    transparent
+  );
+  --navbar-cta-border-hover: color-mix(
+    in srgb,
+    var(--color-ink-ivory) 72%,
+    transparent
+  );
+  --navbar-cta-ink: color-mix(in srgb, var(--color-ink-ivory) 92%, transparent);
+  --navbar-cta-text: clamp(10px, 0.573vw, 11px);
+  --navbar-cta-tracking: 0.1em;
+
+  /* Custom inline SVG arrow, never a font glyph. */
+  --navbar-arrow-size: calc(12 * var(--navbar-u));
+  --navbar-arrow-gap: calc(10 * var(--navbar-u));
+  --navbar-arrow-shift: 3.5px;
+}

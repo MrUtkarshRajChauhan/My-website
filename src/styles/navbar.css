@@ -1,0 +1,372 @@
+/* ==========================================================================
+   NAVBAR — Step 2 (opaque band)
+   --------------------------------------------------------------------------
+   The only UI built in this step. It sits inside .ui-layer (layer 3), so it
+   paints above the pinned canvas (layer 1) and the cinematic overlay
+   (layer 2) without touching either.
+
+   The bar is a full-bleed OPAQUE BAND pinned to the top of the viewport, not
+   a floating rule. The cinematic underneath is a full-bleed pinned canvas, so
+   a transparent bar let the film show straight through the one region that has
+   to read as chrome, and the subject's head collided with the labels. The band
+   is a solid plate with no alpha, no gradient, no backdrop filter and no
+   transparency anywhere in its own box, so the canvas provably cannot show
+   through the navbar region.
+
+   WHY IT CANNOT AFFECT THE CINEMATIC
+   The band is `position: fixed` and out of flow, so it contributes nothing to
+   document height — the ~600vh the ScrollTrigger pin depends on is untouched.
+   No ancestor of .ui-layer has a transform, filter, will-change or contain
+   (globals.css bans all four on html/body for exactly this reason), so
+   `fixed` resolves against the viewport and not against the pinned canvas.
+   It also sets no CSS custom property that the canvas reads: the two systems
+   share only the scale unit, never a geometry value. Resizing the band
+   therefore cannot move, crop or re-frame a single pixel of the film, and the
+   band stays put while the film scrubs underneath it.
+
+   Every dimension is a multiple of --navbar-u (1px at 1920, with a
+   legibility floor). The inner row is a `1fr auto 1fr` grid, so the
+   navigation is centred by construction and no label is individually
+   positioned. The band carries no rule of its own; the only line in the navbar is one continuous progress track beneath the whole label group — a single ivory hairline, a mint fill over the part already travelled, and one bead at the fill's exact end.
+   ========================================================================== */
+
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: var(--navbar-band-h);
+  z-index: var(--z-ui);
+
+  /* Semi-transparent blurred nav bar with blended bottom edge. The plate
+     colour is --navbar-band-bg (the deep ground at low alpha) so the chrome
+     can never drift from the page background; the ramp fades to fully
+     transparent so the band has no bottom rule. */
+  background: linear-gradient(
+    to bottom,
+    var(--navbar-band-bg) 0%,
+    color-mix(in srgb, var(--color-bg-deep) 8%, transparent) 70%,
+    transparent 100%
+  );
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom: none;
+
+  /* The band takes pointer input, so the empty stretches between the three
+     regions belong to the navbar rather than the film. Wheel and touch input
+     still reach the document and Lenis normally: nothing here handles or
+     cancels a scroll event. */
+  pointer-events: auto;
+
+  /* The band owns its own stacking context, so the inner row's bottom rule and
+     the active dot can never be lifted above a sibling UI element by a later
+     z-index. */
+  isolation: isolate;
+}
+
+.navbar__inner {
+  /* The band's axis. Each region centres itself on this instead of carrying a
+     hand-tuned top offset, so nothing can drift out of the band if a font or a
+     token changes.
+
+     The row holds 1px clear of the band's bottom edge. It is not a rule and
+     nothing paints there — the band's own bottom rule hangs inside the row at
+     13u below the labels — it just keeps the centred content off the very last
+     pixel of the plate. */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: calc(100% - 1px);
+  position: relative;
+  padding-inline: var(--navbar-gutter-l) var(--navbar-gutter-r);
+}
+
+/* --------------------------------------------------------------------------
+   MONOGRAM
+   --------------------------------------------------------------------------
+   The frame is sized to the visible MARK, not to the PNG. The image is laid
+   out larger than the frame and centred inside it, so the artwork's own ink
+   bounds land exactly on the frame edges and `overflow` crops the rest.
+   -------------------------------------------------------------------------- */
+.navbar__monogram {
+  display: block;
+  line-height: 0;
+  border-radius: var(--radius-sm);
+  flex: 0 0 auto;
+}
+
+.navbar__monogram-frame {
+  position: relative;
+  display: block;
+  width: var(--navbar-mark-w);
+  height: calc(var(--navbar-mark-w) * var(--monogram-mark-h-ratio));
+  overflow: hidden;
+}
+
+.navbar__monogram-frame img {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: calc(var(--navbar-mark-w) * var(--monogram-canvas-scale));
+
+  /* The global reset sets `img { max-width: 100% }`. Left alone it would cap
+     this box at the frame width, undo the scale-up above, and shrink the
+     visible mark to about a third of its intended size. The override is
+     scoped to this one image. */
+  max-width: none;
+  height: auto;
+  transform: translate(-50%, -50%);
+}
+
+/* --------------------------------------------------------------------------
+   NAVIGATION
+   -------------------------------------------------------------------------- */
+.navbar__nav {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+}
+
+.navbar__list {
+  display: flex;
+  align-items: center;
+  gap: var(--nav-gap);
+  /* Containing block for the group hairline (::after) below. It carries no
+     offsets, so the group's box — and therefore all five labels — does not
+     move, and it is also the box `.navbar__track` measures itself against, so
+     the hairline, the fill and the bead all share one coordinate space. */
+  position: relative;
+}
+
+/* NAVIGATION BASELINE / PROGRESS TRACK BASE — one continuous, straight,
+   rectangular hairline beneath the whole link group, doubling as the track's
+   base layer. Spans exactly HOME's left boundary to CONTACT's right boundary
+   (pinned to the group's padding box, which has no padding), never the
+   monogram or the CTA. No gaps, no per-label underlines.
+
+   Uniform white (warm ivory ink) at a restrained 22% across the whole run —
+   perfectly straight with hard square ends: no gradient, no rounded ends, no
+   glow, no blur, no hotspot. Painted at z-index: -1 so it stays behind the
+   labels and behind the track's mint fill and bead, which share this exact
+   1px box one element below. */
+.navbar__list::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: calc(-1 * var(--navbar-rule-drop));
+  height: 1px;
+  z-index: -1;
+  border-radius: 0;
+  box-shadow: none;
+  background: color-mix(in srgb, var(--color-ink-ivory) 22%, transparent);
+  pointer-events: none;
+}
+
+/* Type is restated rather than inherited from .t-nav because the design
+   target is tighter than the --text-nav role scale: 13px at 1920 with 0.2em
+   tracking, held to weight 500 and line-height 1. Weight, line-height and
+   the uppercase transform still come from .t-nav. */
+.navbar__link {
+  position: relative;
+  display: block;
+  font-size: var(--navbar-text);
+  letter-spacing: var(--navbar-tracking);
+  color: var(--navbar-ink-idle);
+  border-radius: var(--radius-sm);
+  transition: color 240ms ease;
+}
+
+.navbar__link:hover {
+  color: var(--navbar-ink-hover);
+}
+
+.navbar__link.is-active {
+  color: var(--navbar-ink-active);
+}
+
+/* Grows the pointer target vertically without touching layout, so the
+   indicator's offset and the row height stay exact. */
+.navbar__link::before {
+  content: '';
+  position: absolute;
+  inset: calc(var(--nav-hit-slop) * -1) 0;
+}
+
+/* --------------------------------------------------------------------------
+   SCROLL PROGRESS TRACK — one continuous line, one bead
+   --------------------------------------------------------------------------
+   The base track is the group hairline above: a single ivory run from HOME's
+   left boundary to CONTACT's right boundary, with no gaps and no per-label
+   underlines. This element sits on exactly that hairline's 1px box — same
+   containing block (the label group, via the shrink-wrapped nav), same
+   `--navbar-rule-drop` axis — and adds only the two moving parts:
+
+     • .navbar__track-fill — the mint run from the track's start to the
+       current scroll position. `width: 100%` scaled by
+       `scaleX(var(--nav-track-progress))` about `transform-origin: 0 50%`,
+       so its rendered length IS the progress ratio times the track width and
+       its right edge lands exactly where the bead sits. One unitless custom
+       property, written straight onto `.navbar__track` once per scroll frame.
+
+     • .navbar__track-bead — the single marker at the fill's end, moved by
+       `translateX(var(--nav-x))` (a transform, so nothing reflows) and
+       centred on the line by its own negative margins. Static: no pulse, no
+       breathing, no scale, no flicker, no timer. The only thing that moves it
+       is the scroll position, written once per scroll frame.
+
+   Deliberately no `transition` on either: the indicator must track the scroll
+   position, and a transition would make it lag behind Lenis instead of
+   following it. Under prefers-reduced-motion nothing changes here either —
+   the pair is a read-out of a position rather than decorative animation, and
+   with no Lenis instance the scroll it reports is set instantly. */
+.navbar__track {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: calc(-1 * var(--navbar-rule-drop));
+  height: 1px;
+  pointer-events: none;
+}
+
+.navbar__track-fill {
+  position: absolute;
+  inset: 0;
+  background: var(--color-accent);
+  /* The fallback 0 is the initial state, so the fill is zero-width — never a
+     full line — until the first progress value arrives. */
+  transform: scaleX(var(--nav-track-progress, 0));
+  transform-origin: 0 50%;
+}
+
+.navbar__track-bead {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  /* 5u = 44-52px-wide band's 4.25-5px marker — the same scale the navbar
+     uses for everything else, and the same size the removed active dot had. */
+  width: calc(5 * var(--navbar-u));
+  height: calc(5 * var(--navbar-u));
+  /* Centre the bead on the line's vertical axis and on its own horizontal
+     position. Margins rather than a percentage translate, so the only
+     transform is the one the scroll position writes. */
+  margin-top: calc(5 * var(--navbar-u) * -0.5);
+  margin-left: calc(5 * var(--navbar-u) * -0.5);
+  border-radius: 50%;
+  /* LUMINOUS CORE — a nearly white mint-green centre (`#F2FFF9`) that keeps the
+     marker crisp and readable at the fill's exact end, deepening to the existing
+     accent mint at the rim. Size and position are unchanged: only the paint. */
+  background: radial-gradient(
+    circle at 50% 50%,
+    #F2FFF9 0%,
+    #E9FFF5 42%,
+    var(--color-accent) 100%
+  );
+  /* MEDIUM GLOW — a clearly visible mint ring and a soft emerald halo, falling
+     to transparency by ~14px from the centre: luminous enough to stand out on
+     the dark band, yet kept low-spread so the labels and the 1px track stay
+     dominant. Purely static: no pulse, breathing, scale, timer or animation, so
+     the bead remains a pure read-out of the scroll position (the scroll-written
+     transform below is untouched). */
+  box-shadow:
+    0 0 4px 1px rgba(80, 227, 164, 0.78),
+    0 0 9px 3px rgba(80, 227, 164, 0.4),
+    0 0 14px 4px rgba(0, 168, 120, 0.18);
+  transform: translateX(var(--nav-x, 0px));
+}
+
+/* SOFT OUTER HALO — one centred pseudo-element so the emerald glow falls off
+   smoothly instead of banding at the blur edge. It is centred on the bead by a
+   percentage translate of its own, so it never affects the bead's own geometry,
+   position or the scroll-written transform. Calibrated to the medium setting:
+   a ~28px box that seasons the area around the dot without forming a second
+   bright light over the labels or the track. */
+.navbar__track-bead::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 28px;
+  height: 28px;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(80, 227, 164, 0.22) 0%,
+    rgba(0, 168, 120, 0.09) 45%,
+    rgba(0, 168, 120, 0) 72%
+  );
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* The progress track has no transition, keyframe or timer of its own — it is
+     a read-out of the scroll position — so there is nothing to disable here. */
+
+  /* Hide/restore of the CTA is a functional state change, not decorative
+     motion, so it still happens — just without the 180ms fade. */
+  .navbar__cta {
+    transition: none;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   LET'S TALK CTA
+   -------------------------------------------------------------------------- */
+.navbar__cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--navbar-arrow-gap);
+  width: var(--navbar-cta-w);
+  height: var(--navbar-cta-h);
+  padding: 0 0 0 10px;
+  /* Space the CTA off from the nav links on its left. */
+  margin-left: 80px;
+  border: 1px solid var(--navbar-cta-border);
+  border-radius: var(--navbar-cta-radius);
+  background-color: transparent;
+  color: var(--navbar-cta-ink);
+  font-size: var(--navbar-cta-text);
+  letter-spacing: var(--navbar-cta-tracking);
+  white-space: nowrap;
+  flex: 0 0 auto;
+  /* opacity/visibility join the hover transitions: hiding (CHA scroll state)
+     fades the CTA in 180ms and restores it on return to the top. The button
+     keeps its flex slot the whole time, so navigation centring cannot move. */
+  transition:
+    border-color 250ms ease-out,
+    color 250ms ease-out,
+    opacity 180ms ease-out,
+    visibility 180ms ease-out;
+}
+
+.navbar__cta:hover {
+  border-color: var(--navbar-cta-border-hover);
+  color: var(--color-ink-ivory);
+}
+
+/* CHANGE A — hidden scroll state. Visibility + opacity + pointer-events is the
+   smallest mechanism that fully removes the CTA (text AND arrow together)
+   from interaction, focus and the accessibility tree while it keeps its layout
+   slot — the links stay centred and the band keeps its exact geometry. */
+.navbar__cta--hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.navbar__cta-arrow {
+  flex: none;
+  width: var(--navbar-arrow-size);
+  height: var(--navbar-arrow-size);
+  transition: transform 250ms ease-out;
+}
+
+.navbar__cta:hover .navbar__cta-arrow,
+.navbar__cta:focus-visible .navbar__cta-arrow {
+  transform: translateX(var(--navbar-arrow-shift));
+}
+
+

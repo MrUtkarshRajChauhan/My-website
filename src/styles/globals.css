@@ -1,0 +1,231 @@
+/* ==========================================================================
+   GLOBAL BASE — reset + document defaults
+   --------------------------------------------------------------------------
+   HARD CONSTRAINT: this file must not introduce a second scroll system.
+   Specifically banned here, and deliberately absent:
+     • scroll-behavior: smooth   (Lenis owns scroll easing)
+     • transform / filter / will-change / contain on html or body
+       (these create a containing block for position: fixed, which would
+       break the fixed cinematic canvas and overlay during ScrollTrigger pin)
+     • overflow: hidden on html or body on the block axis
+       (this would remove the ~600vh of scroll distance the pin depends on)
+
+   The horizontal overflow clip is preserved exactly as it was before the UI
+   foundation was introduced, because the stage is edge-to-edge.
+   ========================================================================== */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  min-width: 100vw;
+  /* HORIZONTAL GUARD, STICKY-SAFE. `overflow-x: hidden` computes the block
+     axis to `auto`, which turns the element into a scroll container — and a
+     scroll ancestor between a sticky child and the viewport kills the sticky
+     (it would then stick to this never-scrolling box instead). `clip` strips
+     the same horizontal overflow without creating any scroll container, so
+     viewport-anchored sticky stages keep working. */
+  overflow-x: clip;
+}
+
+html {
+  /* No scroll-behavior, no transform, no block-axis overflow lock. */
+  background-color: var(--color-bg-deep);
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+
+  /* ------------------------------------------------------------------
+     HIDE THE SCROLLBAR WITHOUT TOUCHING THE SCROLL MODEL.
+
+     The cinematic is a full-bleed pinned surface, and a permanently visible
+     15px scrollbar is a permanent 15px intrusion into it. The three rules
+     below are the complete standard set, and they are all cosmetic:
+
+       • scrollbar-width / -ms-overflow-style hide the bar in Firefox and
+         legacy Edge.
+       • ::-webkit-scrollbar { display: none } hides it in Blink/WebKit.
+
+     Critically, NONE of them change overflow. `scrollbar-width: none`
+     removes the scrollbar GUTTER too, so the layout viewport becomes exactly
+     window.innerWidth, which is what CinematicCanvas now sizes its box from -
+     so the two agree instead of being off by a scrollbar width.
+
+     This is deliberately NOT `overflow: hidden`, and NOT `body { display:
+     none }`-style trickery: the ~600vh of document height and the native
+     scroll position that Lenis eases and ScrollTrigger measures all stay
+     exactly as they were. Scrolling is untouched; only the bar is hidden.
+     ------------------------------------------------------------------ */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+html::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+
+  /* Ensure edge-to-edge rendering. Same sticky-safety rule as above: `clip`
+     never computes the block axis to `auto`, so the body can never become a
+     scroll container and steal viewport-sticky children. */
+  overflow-x: clip;
+  width: 100%;
+  min-width: 100vw;
+
+  /* Page base. Also acts as the first-paint backdrop, so there is no light
+     flash between document paint and the first decoded frame. */
+  background-color: var(--color-bg-deep);
+  color: var(--color-ink-ivory);
+
+  font-family: var(--font-body);
+  font-size: var(--text-body);
+  line-height: var(--leading-body);
+  letter-spacing: var(--tracking-body);
+  font-synthesis-weight: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+figure,
+blockquote,
+dl,
+dd {
+  margin: 0;
+}
+
+ul,
+ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+img,
+picture,
+video,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+img,
+video {
+  height: auto;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+  letter-spacing: inherit;
+}
+
+button {
+  margin: 0;
+  padding: 0;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* Visible focus is part of the foundation, not an afterthought. Only ever
+   painted for keyboard users. */
+:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+
+::selection {
+  background-color: var(--color-accent);
+  color: var(--color-accent-ink);
+}
+
+/* --------------------------------------------------------------------------
+   The frame engine paints a bare <canvas> whose height is resolved from its
+   own box. Keep the block display so the canvas never gains inline baseline
+   gap; do not add margins, borders or sizing here beyond that.
+   -------------------------------------------------------------------------- */
+canvas {
+  display: block;
+}
+
+/* --------------------------------------------------------------------------
+   LIVE STATUS DOTS — one shared breathing pulse for the site's genuine
+   live-signal indicators. The Home badge dot (WEBSITE DEVELOPER), the
+   testimonial panel's eyebrow dot and the Contact email-panel dot all speak
+   the same "small status dot" language, so they all reference the ONE
+   keyframes pair defined here; each component's stylesheet attaches — and
+   individually reduces — its own animation.
+
+   TRUE-NEON GREEN LIVE LED — these dots are intentionally OFF the Emerald
+   Noir palette (deliberately not var(--color-accent)) so they read as a
+   distinct live-signal device: a vivid green LED core (#00E676) breathing on
+   the classic neon green (#39FF14). Medium, atmospheric intensity; the bloom
+   fades smoothly into transparency and never spreads into nearby content.
+   Nothing moves, scales or reflows; pure CSS shadow/opacity breathing with
+   no timers, no JS and no extra DOM.
+   -------------------------------------------------------------------------- */
+@keyframes status-dot-live {
+  0%,
+  100% {
+    box-shadow:
+      0 0 3px 1px rgba(57, 255, 20, 0.25),
+      0 0 7px 3px rgba(57, 255, 20, 0.12);
+  }
+
+  50% {
+    box-shadow:
+      0 0 4px 1px rgba(57, 255, 20, 0.55),
+      0 0 10px 4px rgba(57, 255, 20, 0.25);
+  }
+}
+
+/* The Contact email dot also carries a static identity ring beside the email
+   value. That ring is part of its design, so its variant keeps the ring in
+   both frames — it breathes with the bloom instead of blinking out mid-cycle. */
+@keyframes status-dot-live-ring {
+  0%,
+  100% {
+    box-shadow:
+      0 0 0 3px var(--color-accent-soft),
+      0 0 3px 1px rgba(57, 255, 20, 0.22),
+      0 0 7px 3px rgba(57, 255, 20, 0.1);
+  }
+
+  50% {
+    box-shadow:
+      0 0 0 3px var(--color-accent-soft),
+      0 0 4px 1px rgba(57, 255, 20, 0.48),
+      0 0 10px 4px rgba(57, 255, 20, 0.22);
+  }
+}

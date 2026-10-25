@@ -1,0 +1,552 @@
+/* ==========================================================================
+   WORK — the post-film page section (Step 1: hero only)
+   --------------------------------------------------------------------------
+   The first portfolio content that lives in NORMAL DOCUMENT FLOW. It is a
+   sibling of <CinematicCanvas /> in App, so it sits after the pinned film's
+   pin-spacer and is simply scrolled into view when the pin releases. Nothing
+   here is fixed, pinned or absolutely stage-locked, and nothing here adds
+   scroll distance or a second scroll mechanism. See Work.tsx for the one
+   additional, non-pinning ScrollTrigger: a scrubbed entrance that fades the two
+   content groups in as the section first enters the viewport.
+
+   STACKING
+   --z-content (3) lifts the section above the fixed cinematic overlay (2) so
+   the approved background keeps its own lighting instead of inheriting the
+   film's vignette/tint. The fixed UI layer shares the same value and comes
+   later in document order, so the navbar still paints on top of Work.
+
+   GEOMETRY (targets quoted at a 16:9 stage, e.g. 1920x1080)
+   Left inset ~140px, WORK label top ~28vh (~302px), headline top ~34vh
+   (~368px), text column <= ~710px, paragraph <= ~630px, headline ~96-104px.
+   The right half of the stage is deliberately left clear for the background
+   subject.
+   ========================================================================== */
+
+.work {
+  position: relative;
+  z-index: var(--z-content);
+  isolation: isolate;
+
+  width: 100%;
+  min-height: 100vh;
+  min-height: 100svh;
+
+  /* BACKGROUND: none of its own. The approved asset is painted by ONE
+     persistent fixed layer (`.static-background`) that <ExpertiseExitRunway />
+     crossfades in BEFORE this section is ever seen. That single layer serves
+     both the transition and the Work page, so the same image is stationary
+     behind the Work content and can never crossfade against or drift from a
+     duplicate copy. Making this section transparent is what lets the asset
+     show through completely unaltered: no overlay, tint or gradient is painted
+     between it and the Work content. */
+  background-color: transparent;
+
+  /* Allow sticky children to behave correctly; clip inner visual overflow if needed. */
+  overflow: visible;
+}
+
+.work01__runway {
+  position: relative;
+  height: calc(100svh + var(--work01-scroll-distance, 0));
+}
+
+.work01__stage {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  overflow: clip;
+}
+
+/* No overlay is painted over the Work background. The section stays fully
+   transparent so the approved `.static-background` asset shows through exactly
+   as authored: no legibility gradient, tint or vignette sits between them. */
+
+.work__inner {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 100%;
+  /* 28vh seats the WORK eyebrow at ~27-29% of the stage so the headline block
+     clears the navbar and its own top lands at ~34vh. */
+  padding-block: clamp(5.25rem, 28vh, 25.5rem) clamp(4rem, 9vh, 7rem);
+  padding-inline: clamp(2.5rem, 7.3vw, 9rem) var(--frame-gutter);
+  display: grid;
+  grid-template-columns: clamp(28rem, 40%, 45rem) 1fr;
+  gap: clamp(2rem, 6vw, 5rem);
+  align-items: center;
+}
+
+.work__copy {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  max-width: clamp(28rem, 37vw, 45rem);
+  z-index: 2;
+}
+
+/* LABEL — small uppercase WORK + a thin mint divider on the same baseline ---- */
+
+.work__label {
+  display: flex;
+  align-items: center;
+  gap: clamp(0.75rem, 0.9vw, 1.125rem);
+  margin: 0;
+  font-family: var(--font-ui);
+  font-size: clamp(0.875rem, 0.85vw, 1.0625rem); /* 14-17px */
+  font-weight: 500;
+  line-height: 1;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: var(--color-ink-muted);
+}
+
+.work__label-line {
+  display: block;
+  width: clamp(6rem, 13vw, 16.25rem); /* 96-260px */
+  height: 1px;
+  background-color: color-mix(in srgb, var(--color-accent) 70%, transparent);
+  transform: translateY(0.5px);
+}
+
+/* HEADLINE — display serif, three fixed lines, mint only on "Let's Talk." ----- */
+
+.work__title {
+  display: flex;
+  flex-direction: column;
+  margin: clamp(2.25rem, 4.6vh, 3.25rem) 0 0;
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: clamp(2.75rem, 5.2vw, 6.5rem); /* 44-104px */
+  font-weight: 400;
+  line-height: 0.94;
+  letter-spacing: -0.03em;
+  color: var(--color-ink-ivory);
+}
+
+.work__title-line {
+  display: block;
+}
+
+.work__accent {
+  color: var(--color-accent);
+}
+
+/* PARAGRAPH ------------------------------------------------------------------ */
+
+.work__para {
+  max-width: min(33vw, 39.375rem); /* <= 630px */
+  margin: clamp(1.75rem, 3.2vh, 2.5rem) 0 0;
+  font-family: var(--font-body);
+  font-size: clamp(1rem, 1.1vw, 1.3125rem); /* 16-21px */
+  line-height: 1.5;
+  color: var(--color-ink-soft);
+}
+
+/* CTAs ----------------------------------------------------------------------- */
+
+.work__ctas {
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap;
+  gap: clamp(1.375rem, 1.5vw, 1.75rem); /* 22-28px */
+  margin-top: clamp(2rem, 4vh, 3rem);
+}
+
+.work__cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(0.5rem, 0.8vw, 0.75rem);
+  height: clamp(3.5rem, 3.4vw, 4rem); /* 56-64px */
+  padding: 0 clamp(1.5rem, 1.9vw, 2.25rem); /* 24-36px */
+  border-radius: var(--radius-pill);
+  font-family: var(--font-ui);
+  font-size: clamp(0.8125rem, 0.95vw, 0.875rem); /* 13-14px */
+  font-weight: 500;
+  line-height: 1;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  white-space: nowrap;
+  text-decoration: none;
+  transition: background-color 220ms ease-out, border-color 220ms ease-out,
+    color 220ms ease-out;
+}
+
+/* Primary — solid mint pill, dark ink. Flat and restrained: no glow, no neon. */
+.work__cta--primary {
+  background-color: var(--color-accent);
+  color: var(--color-accent-ink);
+  border: 1px solid transparent;
+}
+
+.work__cta--primary:hover,
+.work__cta--primary:focus-visible {
+  background-color: color-mix(
+    in srgb,
+    var(--color-accent) 90%,
+    var(--color-ink-ivory)
+  );
+}
+
+/* Secondary — frosted glass: near-transparent dark-green fill, a thin
+   light-neutral border and warm-ivory text. Never opaque white. */
+.work__cta--ghost {
+  background-color: color-mix(in srgb, var(--color-ink-ivory) 12%, transparent);
+  border: 1px solid color-mix(in srgb, var(--color-ink-ivory) 18%, transparent);
+  color: var(--color-ink-ivory);
+  -webkit-backdrop-filter: blur(14px) saturate(130%);
+  backdrop-filter: blur(14px) saturate(130%);
+}
+
+.work__cta--ghost:hover,
+.work__cta--ghost:focus-visible {
+  background-color: color-mix(in srgb, var(--color-ink-ivory) 18%, transparent);
+  border-color: color-mix(in srgb, var(--color-ink-ivory) 28%, transparent);
+}
+
+.work__cta-arrow {
+  width: clamp(0.8125rem, 0.95vw, 0.875rem);
+  height: clamp(0.8125rem, 0.95vw, 0.875rem);
+  transition: transform 220ms ease-out;
+}
+
+.work__cta:hover .work__cta-arrow,
+.work__cta:focus-visible .work__cta-arrow {
+  transform: translateX(3px);
+}
+
+.work__cta:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+
+/* --------------------------------------------------------------------------
+   THE COLLAGE — three independently positioned, independently hoverable
+   project previews on the right side of the hero.
+
+   WHY THESE NUMBERS ARE NOT THE ELEMENT BOX YOU MIGHT EXPECT
+   Each asset is 1536x1024 and the artwork does NOT fill that frame: every PNG
+   carries transparent padding around a card whose tilt is already baked in. An
+   element laid out at the design's VISIBLE artwork bounds would therefore draw
+   the card in the wrong place, at the wrong size. The frames below were measured
+   from each asset's alpha channel (principal silhouette, excluding the faint
+   drop shadow):
+
+     floating-2 cream  rear-left   visible x 11.25-92.78%   y  4.79-97.29%
+     floating-3 navy   rear-right  visible x  6.94-94.72%   y  4.17-97.50%
+     floating-1 front  foreground  visible x 11.81-88.33%   y  8.13-92.50%
+
+   Every left/top/width below is the ALPHA-CORRECTED element box that lands the
+   VISIBLE artwork on the approved target. For element width w and source width
+   W (scale s = w / W):
+
+     visible-left  = element-left + s * x0   visible-top    = element-top + s * y0
+     visible-right = element-left + s * x1   visible-bottom = element-top + s * y1
+
+   The targets are quoted against the Work HERO and are consistent with the 16:9
+   design stage, which is why this layer covers the hero box rather than the copy
+   grid: every percentage then reads directly in the design's own coordinates.
+   Resolved at the 1920x1080 reference:
+
+     cream  element 36.03% / 10.71% / 35.27vw -> visible 40.0% left, 12.7% top, 28.8% wide
+     navy   element 70.8% / 10.58% / 28.72vw -> visible 72.8% left, 12.0% top, right 98.0%
+     front  element 42.24% / 27.5% / 47.89vw -> visible 47.9% left, 32.1% top, 36.7% wide
+
+   i.e. the approved overall artwork span of 40-98% across and 12-80% down the
+   hero. Slot widths are bare vw (no px clamps) so the composition keeps
+   scaling with the stage on wider frames instead of shrinking inside fixed
+   px caps.
+
+   The assets are placed VERBATIM: no CSS rotation (their tilt is baked in), no
+   outline, and no resting shadow or glow is added to the artwork.
+   -------------------------------------------------------------------------- */
+.work__showcase {
+  position: absolute;
+  inset: 0; /* the HERO box, not the padded copy column */
+  z-index: 0; /* under .work__inner (1), which holds the copy and stays on top */
+  pointer-events: none; /* decorative; the slots opt back in for hover */
+}
+
+/* POSITION ONLY. No transform here, so the scroll entrance (on .work__showcase)
+   and the hover (on .work__card-hover) can never fight over one property. */
+.work__card-slot {
+  position: absolute;
+  pointer-events: auto;
+  /* Perspective lives here so the hover wrapper's rotationX/rotationY read as
+     depth rather than as a flat skew. */
+  perspective: 1100px;
+}
+
+/* HOVER TRANSFORM ONLY (GSAP writes rotation / x / y / scale). */
+.work__card-hover {
+  transform-style: preserve-3d;
+  will-change: transform;
+  transition: filter 300ms ease-out;
+}
+
+.work__card-img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* The hovered card temporarily becomes the foremost of the three. The class is
+   added and removed by the interaction effect, so the resting order returns as
+   soon as the pointer leaves. */
+.work__card-slot.is-hovered {
+  z-index: 9;
+}
+
+/* A restrained depth cue, and only while hovered: a drop-shadow follows the
+   PNG's alpha silhouette, so it can never introduce a visible box. Nothing is
+   painted at rest. */
+.work__card-slot.is-hovered .work__card-hover {
+  filter: drop-shadow(0 34px 70px rgba(0, 0, 0, 0.45));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .work__card-hover {
+    transition: none;
+  }
+}
+
+/* Rear-left — warm cream Nexora. Behind the other two.
+   Alpha-corrected to the design's VISIBLE targets at the 16:9 stage
+   (L 40vw, T 12.7vh, R 68.75vw, B 51.4vh):
+     we = 35.27vw (677px @1920), he = we * 1024/1536 = 451px
+     left = (40vw   - 0.1125 * we) / 1920 = 36.03%
+     top  = (12.7vh - 0.0479  * he) / 1080 = 10.71% */
+.work__card-slot--cream {
+  left: 36.03%;
+  top: 10.71%;
+  width: 35.27vw;
+  z-index: 1;
+}
+
+/* Rear-right — deep navy Orvion.
+   Alpha-corrected to the design's VISIBLE targets at the 16:9 stage
+   (L 72.8vw, T 12vh, R 98vw, B 43.8vh):
+     we = 28.72vw (551px @1920), he = we * 1024/1536 = 368px
+     left = (98vw  - 0.9472 * we) / 1920 = 70.8%
+     top  = (12vh  - 0.0417 * he) / 1080 = 10.58% */
+.work__card-slot--navy {
+  left: 70.8%;
+  top: 10.58%;
+  width: 28.72vw;
+  z-index: 2;
+}
+
+/* Foreground — the dark emerald creative-studio anchor.
+   Alpha-corrected to the design's VISIBLE targets at the 16:9 stage
+   (L 47.9vw, T 32.1vh, R 84.5vw, B 80vh):
+     we = 47.89vw (919px @1920), he = we * 1024/1536 = 613px
+     left = (47.9vw - 0.1181 * we) / 1920 = 42.24%
+     top  = (32.1vh - 0.0813 * he) / 1080 = 27.5% */
+.work__card-slot--front {
+  left: 42.24%;
+  top: 27.5%;
+  width: 47.89vw;
+  z-index: 3;
+}
+
+/* --------------------------------------------------------------------------
+   LEFT-EDGE INDICATORS — the vertical WORK rail and the lower-left SCROLL cue.
+
+   Both are absolutely positioned against the Work HERO (the 100svh sticky
+   stage: both marks are direct children of <div class="work01__stage">), so
+   their percentages resolve against the hero box rather than the padded copy
+   column or the 448vh runway. `left` uses max(1.75rem, 2%) so a centred label
+   can never push past the left frame edge; the stage's own `overflow: clip`
+   guarantees no horizontal scrollbar regardless, and it also means the rail is
+   anchored to the viewport for as long as the stage is pinned — it can never
+   scroll out of view during the choreography.
+
+   The rail is the left-hand counterpart to the Home hero's SCROLL cue and
+   borrows the About marker's lockup - rule, then mint endpoint dot, then
+   label - so the line descends INTO its endpoint and the vertical WORK label
+   sits below it, centred on the rail's own axis. It repeats the WORK eyebrow
+   that precedes the headline; both remain visible. Decorative and inert
+   (pointer-events: none, aria-hidden in the markup).
+   -------------------------------------------------------------------------- */
+.work__rail {
+  position: absolute;
+  left: max(1.75rem, 2%);
+  top: 12%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* 1 · RULE — 1px, perfectly vertical, descending from a faded start to a
+   brighter join at the endpoint dot. ~11.5% of the hero at the reference. */
+.work__rail-line {
+  order: 1;
+  width: 1px;
+  height: clamp(5rem, 11.5vh, 8rem);
+  background: linear-gradient(
+    to bottom,
+    var(--color-line-muted),
+    var(--color-line-strong)
+  );
+}
+
+/* 2 · ENDPOINT DOT — the rail's single point of light, echoing the rail/marker
+   node: a small mint-leaning core centred on the rule's lower end (the negative
+   margin lifts it so the rule meets the dot's centre). */
+.work__rail-dot {
+  order: 2;
+  width: 5px;
+  height: 5px;
+  margin-top: -2.5px;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--color-ink-ivory) 72%, var(--color-accent));
+  box-shadow:
+    0 0 5px var(--indicator-core-glow, var(--color-accent-line)),
+    0 0 10px var(--indicator-outer-glow, var(--color-accent-soft));
+}
+
+/* 3 · LABEL — the vertical WORK lockup, below the dot. Reads bottom-to-top,
+   understated warm ivory, never lit. Horizontal centring comes from the flex
+   axis, so it can never drift off the rail. */
+.work__rail-label {
+  order: 3;
+  margin-top: 1.1rem;
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  font-family: var(--font-ui);
+  font-size: clamp(0.6875rem, 0.6vw, 0.75rem);
+  line-height: 1;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--color-ink-ivory) 85%, transparent);
+}
+
+/* LOWER-LEFT SCROLL CUE — the same visual language as the Home hero's SCROLL
+   indicator (vertical line, endpoint dot, small uppercase label) so Home and
+   Work read as one system. The label sits just right of the line near its top. */
+.work__scroll {
+  position: absolute;
+  left: max(1.75rem, 2%);
+  top: 86%;
+  display: flex;
+  align-items: flex-start;
+  gap: clamp(0.8125rem, 1.3vw, 0.9375rem);
+  pointer-events: none;
+  z-index: 2;
+}
+
+.work__scroll-line {
+  position: relative;
+  width: 2px;
+  height: clamp(3.5rem, 6.8vh, 4.75rem);
+  background: linear-gradient(
+    to bottom,
+    var(--color-line-muted),
+    var(--color-line-strong)
+  );
+}
+
+/* Ivory dot on the line's lower endpoint, exactly as the Home cue. */
+.work__scroll-dot {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 6px;
+  height: 6px;
+  margin-left: -2px;
+  border-radius: 50%;
+  background-color: var(--color-ink-ivory);
+}
+
+.work__scroll-label {
+  margin-top: -0.5rem;
+  font-family: var(--font-ui);
+  font-size: clamp(11px, 0.5vw, 12px);
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--color-ink-muted);
+}
+
+/* --------------------------------------------------------------------------
+   SERVICE STRIP — three unboxed capabilities along the bottom-right edge.
+   Deliberately flat chrome: no card, no background, no border, no glow. The
+   only structure is one thin low-contrast divider between items, echoing the
+   metadata label dividers used elsewhere. It is pointer-inert static chrome so
+   it can never intercept a hover meant for the collage, and it sits above the
+   collage layer (the foreground card's own transparent bottom padding reaches
+   into this band; its VISIBLE artwork ends ~80%, clear of the strip).
+   -------------------------------------------------------------------------- */
+.work__services {
+  position: absolute;
+  left: 56%;
+  right: 7%;
+  /* The strip's bottom edge rests ~3.5vh above the hero's bottom edge, so the
+     three capabilities sit in the bottom-right corner with 3-4vh clearance at
+     the 16:9 reference and stay clear of the frame on shorter viewports too.
+     One anchored inset instead of stacked nudges, and the items themselves
+     stay untouched: the strip centres them inside its own band. */
+  bottom: clamp(1.75rem, 3.5vh, 3rem);
+  height: clamp(2.75rem, 4.5vh, 3.25rem);
+  display: flex;
+  align-items: center;
+  gap: clamp(1.25rem, 2.4vw, 2.75rem);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.work__service {
+  display: flex;
+  align-items: center;
+  gap: clamp(0.5rem, 0.8vw, 0.75rem);
+  font-family: var(--font-ui);
+  font-size: clamp(0.75rem, 0.82vw, 0.875rem);
+  line-height: 1;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--color-ink-ivory) 86%, transparent);
+}
+
+/* Restrained ivory outline glyph, drawn on currentColor so it inherits the
+   label's ink and never introduces a second colour. */
+.work__service-icon {
+  flex: none;
+  width: clamp(1.125rem, 1.35vw, 1.5rem);
+  height: clamp(1.125rem, 1.35vw, 1.5rem);
+  color: inherit;
+}
+
+/* The single divider between items: thin, low contrast, shorter than the row. */
+.work__service-sep {
+  flex: none;
+  align-self: center;
+  width: 1px;
+  height: clamp(1.125rem, 1.6vh, 1.5rem);
+  background-color: var(--color-line-muted);
+}
+
+@media (max-width: 1440px) {
+  .work__inner {
+    grid-template-columns: clamp(26rem, 38vw, 40rem) 1fr;
+    gap: clamp(1.5rem, 4vw, 3rem);
+  }
+  /* The collage needs no override here: its slot geometry is already fluid
+     (percentage positions + vw/clamp widths), so it scales with the hero. */
+}
+
+/* The <= 1000px and <= 768px narrow-composition bands were removed: mobile
+   responsiveness is retired from this build and the desktop five-beat
+   stage — copy left, absolutely positioned 16:9 collage right — is the
+   authoritative composition at every viewport width. */
+
+@media (prefers-reduced-motion: reduce) {
+  .work__cta,
+  .work__cta-arrow {
+    transition: none;
+  }
+}

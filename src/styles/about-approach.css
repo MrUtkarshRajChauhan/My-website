@@ -1,0 +1,161 @@
+/* ==========================================================================
+   ABOUT MY APPROACH — Block 03
+   --------------------------------------------------------------------------
+   Second block of the shared left lane (see about-intro.css), so it always
+   flows directly below the Introduction at whatever height that block
+   actually renders. PERSISTS once entered.
+
+   Proportional targets (spec §7):
+     left edge ≈ 5% vw      top edge ≈ 49.2% vh      max width ≈ 320px
+   Left edge comes from the calibration shift below: the block is pulled out
+   of the Introduction's column (--about-lane-left, ~10.2vw) to its own
+   --about-approach-left (~5vw on wide viewports via the lane variable), so
+   the two blocks no longer share one alignment edge. On short viewports the
+   SCROLL indicator's floor inside --about-approach-left still applies.
+   Top still flows from the lane, because the Introduction's height is
+   viewport-dependent and any fixed vh offset would paint this block through
+   it on tall viewports. The right edge is capped below 33vw so the readable
+   text stays clear of the subject, mirroring the Introduction's
+   subject-clearance rule (now measured from the block's own 5vw edge).
+   ========================================================================== */
+
+.about-approach {
+  position: relative;
+  margin-left: calc(var(--about-approach-left) - var(--about-lane-left));
+}
+
+.about-approach__clip {
+  width: min(
+    clamp(13.5rem, 18vw, 20rem),
+    calc(33vw - var(--about-approach-left))
+  );
+  overflow: hidden;
+}
+
+.about-approach__content {
+  width: 100%;
+  will-change: transform, opacity;
+}
+
+/* MARKER — "03 — MY APPROACH" -------------------------------------------- */
+
+.about-approach__marker {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.3rem;
+}
+
+.about-approach__marker-num {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: clamp(1.4375rem, 1.5vw, 1.875rem); /* 23-30px */
+  line-height: 1;
+  letter-spacing: 0.02em;
+  color: var(--color-ink-soft);
+}
+
+.about-approach__marker-label {
+  font-family: var(--font-ui);
+  font-size: clamp(0.625rem, 0.56vw, 0.6875rem); /* 10-11px */
+  line-height: 1;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--color-ink-muted);
+}
+
+/* HEADLINE — exact three lines; "Refine." is mint ------------------------ */
+
+.about-approach__headline {
+  display: flex;
+  flex-direction: column;
+  margin-top: clamp(0.3125rem, 0.7vh, 0.75rem);
+  font-family: 'Playfair Display', Georgia, serif;
+  font-weight: 400;
+  font-size: clamp(1.375rem, 2.2vw, 2.625rem); /* 22-42px */
+  line-height: 1.04;
+  letter-spacing: -0.01em;
+  color: var(--color-ink-ivory);
+}
+
+.about-approach__highlight {
+  color: var(--color-about-accent);
+}
+
+/* PROCESS — compact editorial list (not cards) with a subtle connector ---- */
+
+.about-approach__steps {
+  position: relative;
+  margin: clamp(0.5rem, 1vh, 0.875rem) 0 0;
+  padding: 0 0 0 1.05rem;
+  list-style: none;
+}
+
+/* The vertical connector: 1px, fading at both ends. */
+.about-approach__steps::before {
+  content: '';
+  position: absolute;
+  left: 2px;
+  top: 0.6rem;
+  bottom: 0.6rem;
+  width: 1px;
+  background: linear-gradient(
+    to bottom,
+    color-mix(in srgb, var(--color-ink-ivory) 20%, transparent),
+    color-mix(in srgb, var(--color-ink-ivory) 8%, transparent) 55%,
+    color-mix(in srgb, var(--color-ink-ivory) 4%, transparent) 100%
+  );
+}
+
+/* Editorial row: the vertical rail node is painted on the connector (absolute),
+   then the row is a two-track grid — step number, then title + copy — which
+   with the rail reads as the required three-column editorial list. */
+.about-approach__step {
+  position: relative;
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  column-gap: clamp(0.4rem, 0.7vw, 0.65rem);
+  align-items: baseline;
+}
+
+.about-approach__step + .about-approach__step {
+  margin-top: clamp(0.375rem, 0.75vh, 0.625rem);
+}
+
+/* Restrained circular marker, centred on the connector line. */
+.about-approach__node {
+  position: absolute;
+  left: -1.05rem;
+  top: 0.32rem;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--color-ink-faint);
+}
+
+.about-approach__step-num {
+  font-family: var(--font-mono);
+  font-size: clamp(0.6875rem, 0.72vw, 0.8125rem); /* 11-13px */
+  font-weight: 400;
+  line-height: 1.25;
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+  color: var(--color-ink-faint);
+}
+
+.about-approach__step-title {
+  margin: 0;
+  font-family: var(--font-ui);
+  font-size: clamp(0.75rem, 0.8vw, 0.875rem); /* 12-14px */
+  font-weight: 500;
+  line-height: 1.25;
+  letter-spacing: 0.005em;
+  color: var(--color-ink-ivory);
+}
+
+.about-approach__step-text {
+  margin: 0.2rem 0 0;
+  font-family: var(--font-body);
+  font-size: clamp(0.75rem, 0.8vw, 0.875rem); /* 12-14px */
+  line-height: 1.4;
+  color: var(--color-ink-soft);
+}

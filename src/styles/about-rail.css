@@ -1,0 +1,213 @@
+/* ==========================================================================
+   ABOUT PROGRESS RAIL — right-side indicator
+   --------------------------------------------------------------------------
+   The rail reads as a single About-accent (turquoise-green) light travelling</think><tool_call>edit<arg_key>newString</arg_key><arg_value>   A visual progress indicator only: no click-to-scroll, no snap, no
+   independent scrolling, no ScrollTrigger. It is plain DOM whose classes are
+   toggled from the shared scroll progress, exactly like the blocks.
+
+   The rail also reserves a right-hand gutter (--about-rail-gutter) that the
+   right-side blocks subtract from their width, so text and rail never collide.
+
+   LIGHT TREATMENT
+   The rail reads as a single turquoise-green (the About-local #00E6BC)
+   light travelling down a matte line: only the currently-introducing node is
+   lit (core dot + halo + a localised
+   illuminated segment of the line either side); every other node stays muted
+   grey-green. The active node and label are driven entirely by the existing
+   scroll state (`data-state`) and are never hardcoded.
+   ========================================================================== */
+
+:root {
+  /* Rail right inset (≈ 2.5–3.5% vw) plus the rail's own width, reserved so
+     the right-lane blocks can never collide with the rail's labels. */
+  --about-rail-inset: clamp(1.25rem, 2.6vw, 4.5rem);
+  --about-rail-gutter: calc(var(--about-rail-inset) + 5.75rem);
+  /* Vertical gap between rail nodes. Also reused as the span of the active
+     node's illuminated line segment, so the two can never drift apart. */
+  --about-rail-gap: clamp(2rem, 9.75vh, 9rem);
+}
+
+/* The shared chrome layer: full-viewport, out of flow, transparent to
+   pointer events. It is the containing block for the left marker and the
+   right rail, and the single element whose class gates their visibility.
+
+   It also scopes the indicator light language, so the About-local tokens
+   below can never leak into the rest of the UI. The hue is the About-local
+   turquoise-green (--color-about-accent, #00E6BC); every glow share mirrors
+   the site's existing verdicts (38% line / 14% soft) so the light reads as
+   the same device at the new About hue, while the global mint stays untouched
+   for the other sections. */
+.about-chrome {
+  /* The single luminous colour of the About composition's indicators. */
+  --indicator-mint: var(--color-about-accent);
+  /* Muted grey-green for the inactive rail nodes and labels. */
+  --indicator-inactive: color-mix(in srgb, var(--color-ink-muted) 55%, transparent);
+  /* Quieter grey-green for the underlying rail line and marker rule. */
+  --indicator-line: color-mix(in srgb, var(--color-ink-muted) 36%, transparent);
+  /* The two glow ramps: a tighter core and a softer outer diffusion — the
+     same 38% / 14% shares the accent tokens use, spun from the About hue. */
+  --indicator-core-glow: color-mix(in srgb, var(--color-about-accent) 38%, transparent);
+  --indicator-outer-glow: color-mix(in srgb, var(--color-about-accent) 14%, transparent);
+
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.about-rail {
+  position: absolute;
+  right: var(--about-rail-inset);
+  top: 50%;
+  transform: translateY(-50%);
+  opacity: 0;
+  transition: opacity 420ms ease;
+}
+
+.about-chrome--visible .about-rail {
+  opacity: 1;
+}
+
+/* Once the composition starts its scroll-driven exit, the rail (and marker)
+   are written directly from the shared progress. The reveal transition above
+   would otherwise smooth those per-progress values and make the exit lag, so
+   it is disabled for exactly the scrubbed interval and the reveal transition
+   is restored as soon as the composition is back at rest. */
+.about-chrome--scrub .about-rail,
+.about-chrome--scrub .about-marker {
+  transition: none;
+}
+
+/* Restrained vertical line: matte grey-green, fading at both ends. */
+.about-rail__line {
+  position: absolute;
+  right: 0;
+  top: 0.05rem;
+  bottom: 0.05rem;
+  width: 1px;
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    var(--indicator-line) 12%,
+    var(--indicator-line) 88%,
+    transparent 100%
+  );
+}
+
+.about-rail__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  /* Spreads the five markers to a ~40–45% viewport-height span, per the
+     progress-rail target, while staying centred on the viewport axis. */
+  gap: var(--about-rail-gap);
+}
+
+.about-rail__item {
+  position: relative;
+  display: flex;
+  justify-content: flex-end;
+  /* Clearance for the vertical line at the rail's right edge. */
+  padding-right: 0.85rem;
+  font-family: var(--font-ui);
+  font-size: calc(clamp(0.5625rem, 0.5vw, 0.625rem) + 5px); /* 14-15px */
+  line-height: 1;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-ink-faint);
+  transition: color 320ms ease;
+}
+
+.about-rail__label {
+  display: block;
+  white-space: nowrap;
+}
+
+/* Localised About-accent illumination on the line, centred on the active node and
+   fading into the muted rail at both ends, so the rail never becomes a brightly
+   lit tube. Mirrors the navbar's tapered mint beam. */
+.about-rail__item::before {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 50%;
+  width: 1px;
+  height: var(--about-rail-gap);
+  transform: translate(50%, -50%);
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    var(--indicator-core-glow) 30%,
+    var(--indicator-mint) 50%,
+    var(--indicator-core-glow) 70%,
+    transparent 100%
+  );
+  box-shadow: 0 0 4px var(--indicator-core-glow);
+  opacity: 0;
+  transition: opacity 220ms ease;
+  pointer-events: none;
+}
+
+.about-rail__item[data-state='active']::before {
+  opacity: 1;
+}
+
+/* Marker, centred on the connector line. Inactive nodes are a muted
+   grey-green pip with no halo. */
+.about-rail__dot {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--color-ink-faint);
+  transform: translate(50%, -50%) scale(0.62);
+  transition:
+    background 320ms ease,
+    transform 320ms ease,
+    box-shadow 320ms ease,
+    opacity 320ms ease;
+  opacity: 0.7;
+}
+
+/* Currently-introducing block: the rail's only light source. */
+.about-rail__item[data-state='active'] {
+  color: var(--indicator-mint);
+  /* A whisper of glow so the label reads as lit rather than neon. */
+  text-shadow: 0 0 7px color-mix(in srgb, var(--color-about-accent) 24%, transparent);
+}
+
+.about-rail__item[data-state='active'] .about-rail__dot {
+  background: var(--indicator-mint);
+  opacity: 1;
+  transform: translate(50%, -50%) scale(1);
+  /* Tight core glow (~5–7px) inside a very soft outer diffusion (~10–14px). */
+  box-shadow:
+    0 0 6px var(--indicator-core-glow),
+    0 0 13px var(--indicator-outer-glow);
+}
+
+/* Entered blocks: settled, matte grey-green — visible but no longer lit, so
+   the lit core stays the single active point on the rail. */
+.about-rail__item[data-state='done'] {
+  color: var(--color-ink-muted);
+}
+
+.about-rail__item[data-state='done'] .about-rail__dot {
+  background: var(--indicator-inactive);
+  opacity: 0.8;
+  transform: translate(50%, -50%) scale(0.62);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .about-rail,
+  .about-rail__item,
+  .about-rail__item::before,
+  .about-rail__dot {
+    transition: none;
+  }
+}

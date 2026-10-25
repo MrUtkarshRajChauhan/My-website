@@ -1,0 +1,112 @@
+/* ==========================================================================
+   ABOUT MARKER — left-side vertical section marker
+   --------------------------------------------------------------------------
+   The About composition's left-edge counterpart to the right-hand progress
+   rail: a thin 1px rule that runs DOWN from a faded start to a single
+   About-local (turquoise-green) endpoint, with the section name set
+   vertically beneath that point.
+   Presentation only (aria-hidden, no pointer interaction, no click-to-scroll).
+   It shares the chrome visibility boundary, so it is invisible through the
+   Home phase and fades in exactly when the About composition begins.
+
+   LOCKUP ORDER is the whole point of this file. Source order is
+   dot → rule → label; the flex `order` properties re-sequence the visual
+   stack to rule → dot → label, so the line descends INTO the endpoint and the
+   ABOUT label sits below it. The dot's negative top margin makes the rule's
+   lower end land exactly on the dot's centre.
+
+   It borrows the rail's indicator light language (the --indicator-* tokens
+   defined on .about-chrome): a single About-local tint endpoint with a tight
+   halo. The vertical ABOUT label itself is never lit.
+
+   Composition is measured against the marker's own height, not the viewport:
+   the rule begins ~9% down, the dot centre sits at ~55%, and the label runs
+   from ~66% to ~96%, leaving a settled gap under the dot.
+   ========================================================================== */
+
+.about-marker {
+  position: absolute;
+  /* Horizontal placement targets ~2.5vw from the viewport edge at the desktop
+     stage. Only the inset changes: the vertical position, the scroll-linked
+     enter/exit behaviour, the label orientation and the pip are untouched. */
+  left: clamp(0.9rem, 2.5vw, 3rem);
+  /* Upper-left region (spec §6.2): the rule, dot and vertical label all stay
+     clear of the top edge and of the bottom-left scroll indicator. */
+  top: clamp(5.5rem, 16vh, 9rem);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* Spacing is set per element (the dot must butt the rule), so the flow gap
+     stays at zero. */
+  gap: 0;
+  /* A little breathing room beneath the label so the lockup never ends flush. */
+  padding-bottom: 0.5rem;
+  opacity: 0;
+  transition: opacity 420ms ease;
+}
+
+.about-chrome--visible .about-marker {
+  opacity: 1;
+}
+
+/* 1 · RULE — 1px, perfectly vertical, running DOWN from a faded start to a
+   brighter, clean join at the endpoint dot. Restrained light grey-green:
+   clearly visible against the forest base without reading as a lit tube. */
+.about-marker__rule {
+  order: 1;
+  width: 1px;
+  height: clamp(4.5rem, 13.75vh, 6.25rem);
+  /* Holds the top of the line ~9% down the composition's own height. */
+  margin-top: clamp(0.875rem, 2.7vh, 1.375rem);
+  background: linear-gradient(
+    to bottom,
+    color-mix(in srgb, var(--color-ink-soft) 8%, transparent) 0%,
+    color-mix(in srgb, var(--color-ink-soft) 40%, transparent) 48%,
+    color-mix(in srgb, var(--color-ink-soft) 62%, transparent) 100%
+  );
+}
+
+/* 2 · ENDPOINT PIP — the marker's single point of light, echoing the rail's
+   active node: a bright turquoise/ivory core inside a tightly localised halo
+   (the About-local accent). Centred exactly on the rule; the negative top
+   margin lifts it so the rule's lower end meets the dot's centre. */
+.about-marker__dot {
+  order: 2;
+  width: 5px;
+  height: 5px;
+  /* Half the core's height: the rule's end sits on the dot's centre. */
+  margin-top: -2.5px;
+  border-radius: 50%;
+  background: color-mix(
+    in srgb,
+    var(--color-ink-ivory) 72%,
+    var(--color-about-accent)
+  );
+  box-shadow:
+    0 0 5px
+      var(--indicator-core-glow, color-mix(in srgb, var(--color-about-accent) 38%, transparent)),
+    0 0 10px
+      var(--indicator-outer-glow, color-mix(in srgb, var(--color-about-accent) 14%, transparent));
+}
+
+/* 3 · LABEL — the vertical lockup, below the dot with a clear gap. Reads
+   bottom-to-top; brighter warm ivory than before, still understated, and
+   never lit (no glow). Horizontal centring comes from the flex axis. */
+.about-marker__label {
+  order: 3;
+  margin-top: 1.25rem;
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  font-family: var(--font-ui);
+  font-size: calc(clamp(0.5625rem, 0.5vw, 0.625rem) + 5px); /* 14-15px */
+  line-height: 1;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--color-ink-ivory) 85%, transparent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .about-marker {
+    transition: none;
+  }
+}

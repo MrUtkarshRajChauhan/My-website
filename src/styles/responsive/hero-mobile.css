@@ -1,0 +1,9 @@
+/* ==========================================================================
+   MOBILE HOME HERO LAYER — RETIRED
+   --------------------------------------------------------------------------
+   Mobile responsiveness has been removed from this build: every rule this
+   file held lived inside `max-width: 767px` (and its height/width
+   sub-queries), so the whole layer is now empty. The approved desktop hero
+   — its geometry and its exit choreography — applies byte-for-byte at
+   every viewport width.
+   ========================================================================== */

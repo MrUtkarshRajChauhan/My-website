@@ -1,0 +1,23 @@
+/* ==========================================================================
+   NARROW-VIEWPORT LAYER — RETIRED
+   --------------------------------------------------------------------------
+   Mobile responsiveness has been removed from this build: the approved
+   desktop composition is authoritative at every viewport width, so every
+   `max-width` band this file used to hold (the <= 900px narrow regime, the
+   <= 767px phone tracks and all of their height/aspect sub-queries) has been
+   deleted. Nothing here ever touched the pinned cinematic engine: the 183
+   frames, the trigger geometry, the frame mapping, Lenis, the progressBus
+   and the exit runway are exactly as they are on the desktop.
+
+   One rule is deliberately kept — unconditionally now, instead of inside
+   the old `min-width: 901px` band — because this stylesheet is the only
+   place that hides the mobile menu devices Navbar.tsx renders. Hiding them
+   at every width is exactly the desktop end state (the burger and the
+   reveal panel were always `display: none` on the desktop), with no
+   breakpoint left behind.
+   ========================================================================== */
+
+.navbar__burger,
+.navbar__menu {
+  display: none;
+}

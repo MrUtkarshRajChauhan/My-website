@@ -1,0 +1,17 @@
+/* ==========================================================================
+   EXPERTISE PHONE LAYER — RETIRED
+   --------------------------------------------------------------------------
+   Mobile responsiveness has been removed from this build: every rule this
+   file held lived inside `max-width: 767px` (+ its short-phone density
+   tier), so the whole band is gone and the approved desktop scene applies
+   at every viewport width.
+
+   The base hide rule is deliberately kept, unconditionally: Expertise.tsx
+   still renders the `.expertise-mobile` tree in the DOM (the desktop
+   choreography keeps querying it), and this rule is what keeps that retired
+   presentation out of view at every viewport.
+   ========================================================================== */
+
+.expertise-mobile {
+  display: none;
+}

@@ -1,0 +1,118 @@
+/* ==========================================================================
+   STYLESHEET ENTRY
+   --------------------------------------------------------------------------
+   Import order matters: tokens must exist before anything references them.
+
+     1. styles/variables.css   design tokens + the z-index scale
+     2. styles/globals.css     reset and document defaults
+     3. styles/typography.css  Clash Display @font-face + type roles
+     4. styles/layout.css      layer geometry + 16:9 desktop stage notes
+     5. styles/navbar.css      Step 2 navbar
+     6. below                  the pre-existing fixed dark cinematic
+                               treatment, unchanged
+   ========================================================================== */
+
+@import './styles/variables.css';
+@import './styles/fonts-playfair.css';
+@import './styles/globals.css';
+@import './styles/typography.css';
+@import './styles/layout.css';
+@import './styles/navbar.css';
+@import './styles/hero.css';
+@import './styles/projects.css';
+@import './styles/about-intro.css';
+@import './styles/about-philosophy.css';
+@import './styles/about-approach.css';
+@import './styles/about-values.css';
+@import './styles/about-closing.css';
+@import './styles/about-rail.css';
+@import './styles/about-marker.css';
+@import './styles/expertise.css';
+@import './styles/work.css';
+@import './styles/work02.css';
+@import './styles/contact.css';
+
+/* 7. styles/responsive/mobile.css — the narrow-viewport layer. Imported after
+   every section stylesheet so its media-query overrides share the plain
+   cascade (no !important). Desktop is untouched: every rule here is inside
+   a `max-width: 900px` media query (or one of its height/aspect
+   sub-queries). */
+@import './styles/responsive/mobile.css';
+
+/* 8. styles/responsive/hero-mobile.css — the dedicated mobile Home hero
+   layer, imported after mobile.css so its hero rules win the plain cascade
+   and mobile.css needs no per-file hero forks. Every rule sits inside
+   `max-width: 767px`: at 768px and above the approved desktop hero is
+   untouched. */
+@import './styles/responsive/hero-mobile.css';
+
+/* 9. styles/responsive/expertise-mobile.css — the dedicated mobile Expertise
+   layer, imported after the responsive layers above so its phone rules win
+   the plain cascade. Every rule sits inside `max-width: 767px` (+ a short-
+   phone density tier inside it): the approved 768px-and-up Expertise scene
+   is untouched; the base `.expertise-mobile { display: none }` keeps the
+   six-composition mobile track out of every larger viewport. */
+@import './styles/responsive/expertise-mobile.css';
+
+/*
+ * The base body and canvas rules that used to live here now live in
+ * styles/globals.css, with identical values:
+ *   body  { margin: 0; padding: 0; overflow-x: hidden; }
+ *   canvas{ display: block; }
+ * They were moved, not changed, so there is a single source of truth for the
+ * document base. The horizontal overflow clip is deliberately preserved: the
+ * stage is edge-to-edge.
+ */
+
+/*
+ * Cinematic dark film overlay.
+ * Pure CSS, fixed, no JS, no scroll handlers, no rAF.
+ * pointer-events: none keeps wheel/touch/pointer events on the canvas + window.
+ *
+ * PROTECTED: the three gradient layers below are the established dark
+ * treatment and are byte-for-byte unchanged. The only edit is the z-index,
+ * which now reads from the --z-cinematic-overlay token in variables.css.
+ * That token is 2, the value that was previously hard-coded here, so the
+ * stacking outcome is identical.
+ */
+.cinematic-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-cinematic-overlay);
+  pointer-events: none;
+  /* Layer 1: vignette - keeps a clear, readable centre, falls off to dark edges */
+  background: radial-gradient(
+    ellipse 118% 105% at 50% 45%,
+    rgba(0, 0, 0, 0) 0%,
+    rgba(0, 0, 0, 0.03) 40%,
+    rgba(0, 0, 0, 0.16) 62%,
+    rgba(0, 0, 0, 0.34) 84%,
+    rgba(0, 0, 0, 0.48) 100%
+  );
+}
+
+.cinematic-overlay::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  /* Layer 2: top + bottom darkening. The mid-band holds a small non-zero floor
+     (0.02) so the subject is darkened slightly too, not only the periphery. */
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.40) 0%,
+    rgba(0, 0, 0, 0.16) 20%,
+    rgba(0, 0, 0, 0.02) 45%,
+    rgba(0, 0, 0, 0.07) 70%,
+    rgba(0, 0, 0, 0.44) 100%
+  );
+}
+
+.cinematic-overlay::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  /* Layer 3: overall tint for a cohesive dark identity. Multiply (not plain
+     alpha) keeps highlights and shadow separation, so detail survives. */
+  background: rgba(3, 5, 9, 0.24);
+  mix-blend-mode: multiply;
+}

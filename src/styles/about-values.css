@@ -1,0 +1,111 @@
+/* ==========================================================================
+   ABOUT WHAT I VALUE — Block 04
+   --------------------------------------------------------------------------
+   Lives inside the fixed UI layer, in the RIGHT-side lane below Philosophy,
+   and PERSISTS once entered.
+
+   Proportional targets (spec §7):
+     left edge ≈ 67.5% vw      top edge ≈ 44.3% vh      max width ≈ 350px
+   Width is capped so the block cannot reach the subject (left) or the
+   progress rail (right).
+   ========================================================================== */
+
+.about-values {
+  position: absolute;
+  /* ALIGNED WITH PHILOSOPHY: both right-lane blocks share the same left
+     edge (67.3vw, kept from the Philosophy block's proportional target) so
+     the two columns read as one editorial line. */
+  left: 67.3vw;
+  top: clamp(12.5rem, 46vh, 52rem);
+  z-index: 2;
+  pointer-events: none;
+  /* Shared left-aligned column with the other right-lane blocks. */
+  text-align: left;
+}
+
+.about-values__clip {
+  width: min(
+    clamp(14.5rem, 24vw, 21.875rem),
+    calc(100vw - 67.3vw - var(--about-rail-gutter))
+  );
+  overflow: hidden;
+}
+
+.about-values__content {
+  width: 100%;
+  will-change: transform, opacity;
+}
+
+/* MARKER — "04 — WHAT I VALUE" ------------------------------------------- */
+
+.about-values__marker {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.3rem;
+}
+
+.about-values__marker-num {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: clamp(1.4375rem, 1.4vw, 1.8125rem); /* 23-29px */
+  line-height: 1;
+  letter-spacing: 0.02em;
+  color: var(--color-ink-soft);
+}
+
+.about-values__marker-label {
+  font-family: var(--font-ui);
+  font-size: clamp(0.625rem, 0.56vw, 0.6875rem); /* 10-11px */
+  line-height: 1;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--color-ink-muted);
+}
+
+/* HEADLINE — one sentence; "details" is mint ----------------------------- */
+
+.about-values__headline {
+  margin: clamp(0.3125rem, 0.75vh, 0.875rem) 0 0;
+  font-family: 'Playfair Display', Georgia, serif;
+  font-weight: 400;
+  font-size: clamp(1.375rem, 2.2vw, 2.375rem); /* 22-38px */
+  line-height: 1.06;
+  letter-spacing: -0.01em;
+  color: var(--color-ink-ivory);
+}
+
+.about-values__highlight {
+  color: var(--color-about-accent);
+}
+
+/* SUPPORTING COPY --------------------------------------------------------- */
+
+/* Controlled width — calibrated (reference desktop type scale, 15px) to a
+   ~344px column, four lines: "Clarity over clutter. Function over
+   decoration." / "Performance without compromise. Every detail" /
+   "should contribute to a better experience for the" / "people using the
+   website." The clamp hands the paragraph back to the lane clip on narrow
+   viewports. */
+
+.about-values__paragraph {
+  margin-top: clamp(0.3125rem, 0.7vh, 0.75rem);
+  max-width: clamp(310px, 17.9vw, 344px);
+  font-family: var(--font-body);
+  font-size: clamp(0.8125rem, 0.85vw, 0.9375rem); /* 13-15px */
+  line-height: 1.45;
+  color: var(--color-ink-soft);
+}
+
+/* DIVIDER — 1px, fading toward its (right) end --------------------------- */
+
+.about-values__divider {
+  display: block;
+  margin-top: clamp(0.5rem, 1vh, 1.125rem);
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    color-mix(in srgb, var(--color-ink-ivory) 22%, transparent),
+    color-mix(in srgb, var(--color-ink-ivory) 9%, transparent) 62%,
+    transparent 100%
+  );
+}

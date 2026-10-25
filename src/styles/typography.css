@@ -1,0 +1,123 @@
+/* ==========================================================================
+   TYPOGRAPHY FOUNDATION
+   --------------------------------------------------------------------------
+   Font: Clash Display — Indian Type Foundry, supplied in
+   ClashDisplay_Complete\Fonts\WEB\fonts\. Licence: FFL.txt (see that file).
+
+   WHAT IS DECLARED, AND WHY
+   The supplied family covers weights 200–700 via a single variable woff2
+   (ClashDisplay-Variable.woff2, 29 KB). That one file is used here as the
+   webfont instead of the six static cuts, because it covers the entire
+   200–700 range the design needs without shipping ~97 KB of static files,
+   and without any risk of a browser resolving a weight to the wrong cut.
+
+   Weights 100 (Thin) and 800/900 do not exist in this family and are
+   therefore never referenced anywhere in the stylesheet.
+
+   The woff2 file in public\fonts\ is a copy, and it is the only one shipped:
+   the six static cuts (200/300/400/500/600/700) are not copied into public
+   because nothing references them and they would add ~97 KB of dead weight to
+   the build output. All seven originals remain untouched in
+   ClashDisplay_Complete\Fonts\WEB\fonts\ if a static cut is ever wanted.
+   ========================================================================== */
+
+@font-face {
+  font-family: 'ClashDisplay';
+  src: url('/fonts/ClashDisplay-Variable.woff2') format('woff2-variations'),
+    url('/fonts/ClashDisplay-Variable.woff2') format('woff2');
+  font-weight: 200 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* --------------------------------------------------------------------------
+   TYPE ROLES
+   --------------------------------------------------------------------------
+   Roles are named for the job they do, not for the element they sit on, so
+   the same role can be applied to an h1, a p or a span as the design
+   evolves. These set type only — no size boxes, no grid, no positioning.
+   -------------------------------------------------------------------------- */
+
+.t-display {
+  font-family: var(--font-display);
+  font-size: var(--text-display);
+  line-height: var(--leading-display);
+  letter-spacing: var(--tracking-display);
+  font-weight: 600;
+}
+
+.t-title {
+  font-family: var(--font-display);
+  font-size: var(--text-title);
+  line-height: var(--leading-heading);
+  letter-spacing: var(--tracking-display);
+  font-weight: 600;
+}
+
+.t-heading {
+  font-family: var(--font-display);
+  font-size: var(--text-heading);
+  line-height: var(--leading-heading);
+  letter-spacing: var(--tracking-heading);
+  font-weight: 500;
+}
+
+.t-subheading {
+  font-family: var(--font-ui);
+  font-size: var(--text-subheading);
+  line-height: var(--leading-tight);
+  letter-spacing: var(--tracking-heading);
+  font-weight: 500;
+}
+
+.t-nav {
+  font-family: var(--font-ui);
+  font-size: var(--text-nav);
+  line-height: 1;
+  letter-spacing: var(--tracking-nav);
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+.t-eyebrow {
+  font-family: var(--font-ui);
+  font-size: var(--text-eyebrow);
+  line-height: 1;
+  letter-spacing: var(--tracking-eyebrow);
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+.t-button {
+  font-family: var(--font-ui);
+  font-size: var(--text-button);
+  line-height: 1;
+  letter-spacing: var(--tracking-nav);
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+.t-body-lg {
+  font-family: var(--font-body);
+  font-size: var(--text-body-lg);
+  line-height: var(--leading-body);
+  letter-spacing: var(--tracking-body);
+  font-weight: 400;
+}
+
+.t-body {
+  font-family: var(--font-body);
+  font-size: var(--text-body);
+  line-height: var(--leading-body);
+  letter-spacing: var(--tracking-body);
+  font-weight: 400;
+}
+
+.t-meta {
+  font-family: var(--font-mono);
+  font-size: var(--text-meta);
+  line-height: 1.2;
+  letter-spacing: var(--tracking-meta);
+  font-weight: 400;
+  text-transform: uppercase;
+}

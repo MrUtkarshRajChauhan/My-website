@@ -1,0 +1,455 @@
+/* ==========================================================================
+   HERO — Step 3
+   -------------------------------------------------------------------------- */
+
+.hero {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hero__inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.hero__left {
+  position: relative;
+  max-width: 470px;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(0.875rem, 1.25vw, 1.125rem);
+  z-index: 2;
+  padding-left: clamp(1rem, 3vw, 2rem);
+  margin-top: clamp(-0.5rem, -0.5vw, 0rem);
+  /* The trust row now lives in .hero__lower (bottom-left cluster), so reserve
+     its former footprint here — the preceding gap + its margin + its own
+     height — as bottom padding. That keeps this column's height, and therefore
+     the vertically-centred eyebrow/headline/paragraph/CTAs, exactly where they
+     were before the move. */
+  padding-bottom: calc(
+    clamp(0.875rem, 1.25vw, 1.125rem) + 1.25rem +
+      max(
+        clamp(2rem, 2.125vw, 2.125rem),
+        1.6 * clamp(0.75rem, 0.78vw, 0.8125rem) + 0.1875rem +
+          1.6 * clamp(0.6875rem, 0.8vw, 0.75rem)
+      )
+  );
+}
+
+.hero__eyebrow {
+  display: flex;
+  align-items: center;
+  gap: clamp(0.5rem, 0.8vw, 0.75rem);
+  /* Requested change: lift the whole eyebrow row exactly 50px. Like the trust
+     row, translateY is used so the displacement is exactly -50px with zero
+     reflow — the headline/CTAs below and the centred column stay put. */
+  transform: translateY(-50px);
+  font-size: clamp(9px, 0.52vw, 10px);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-eyebrow);
+  color: var(--color-ink-muted);
+  margin-top: clamp(0.875rem, 1.5vh, 1.25rem);
+}
+
+.hero__eyebrow-label {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.75rem 0.25rem 0.5rem;
+  border: 1px solid var(--color-line-subtle);
+  border-radius: var(--radius-pill);
+}
+
+.hero__eyebrow-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  /* LIVE CORE — vivid true-green LED (#00E676), deliberately distinct from the
+     site's Emerald Noir theme green. Dimensions and position unchanged. */
+  background-color: #00e676;
+  display: inline-block;
+  margin-right: 10px;
+  vertical-align: middle;
+  /* LIVE SIGNAL — the badge's own status read-out breathes through opacity and
+     shadow only; the dot never moves, scales or changes layout. One shared
+     Emerald Noir bloom pulse (see globals.css) on the specified 2.4s cycle,
+     matching the equivalent status dots elsewhere on the site. */
+  animation: status-dot-live 2.4s ease-in-out infinite;
+}
+
+/* Reduced motion: the continuous pulse is decorative, so it is withdrawn —
+   but the dot keeps its green LED core and a static, restrained bloom. */
+@media (prefers-reduced-motion: reduce) {
+  .hero__eyebrow-dot {
+    animation: none;
+    box-shadow:
+      0 0 3px 1px rgba(57, 255, 20, 0.25),
+      0 0 7px 3px rgba(57, 255, 20, 0.12);
+  }
+}
+
+.hero__eyebrow-sep {
+  width: clamp(1.5rem, 2vw, 2rem);
+  height: 1px;
+  background-color: var(--color-line-subtle);
+}
+
+.hero__headline {
+  display: flex;
+  flex-direction: column;
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: clamp(2.625rem, 3.5vw, 3rem);
+  line-height: 1.04;
+  letter-spacing: -0.01em;
+  font-weight: 400;
+  color: var(--color-ink-ivory);
+  max-width: 650px;
+  white-space: normal;
+}
+
+.hero__highlight {
+  color: var(--color-accent);
+}
+
+.hero__paragraph {
+  max-width: 420px;
+  font-size: clamp(0.875rem, 1vw, 0.9375rem);
+  line-height: 1.6;
+  color: var(--color-ink-soft);
+}
+
+.hero__ctas {
+  display: flex;
+  align-items: center;
+  gap: clamp(0.875rem, 1.2vw, 1rem);
+}
+
+.hero__cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(0.5rem, 0.8vw, 0.75rem);
+  height: clamp(2.5rem, 2.5vw, 2.625rem);
+  padding: 0 clamp(1.25rem, 2vw, 1.75rem);
+  border-radius: var(--radius-pill);
+  font-size: clamp(0.75rem, 0.9vw, 0.875rem);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  white-space: nowrap;
+}
+
+.hero__cta--primary {
+  position: relative;
+  background-color: var(--color-accent);
+  color: var(--color-accent-ink);
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.hero__cta--primary::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+      circle at var(--sheen-x, 50%) var(--sheen-y, 50%),
+      rgba(255, 255, 255, 0.45) 0%,
+      rgba(255, 255, 255, 0.15) 40%,
+      transparent 70%
+    ),
+    linear-gradient(
+      to bottom,
+      rgba(255, 255, 255, 0.12) 0%,
+      rgba(255, 255, 255, 0.06) 60%,
+      transparent 100%
+    );
+  opacity: 0;
+  transition: opacity 200ms ease-out;
+  pointer-events: none;
+  mix-blend-mode: screen;
+}
+
+.hero__cta--primary::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    120deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.25) 50%,
+    transparent 100%
+  );
+  transform: translateX(-100%);
+  transition: transform 400ms ease-out;
+  pointer-events: none;
+  mix-blend-mode: screen;
+}
+
+.hero__cta--primary:hover::before,
+.hero__cta--primary:focus-visible::before {
+  opacity: 0.5;
+}
+
+.hero__cta--primary:hover::after {
+  transform: translateX(100%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero__cta--primary::after,
+  .hero__cta-arrow {
+    transition: none;
+  }
+}
+
+.hero__cta--ghost {
+  background-color: transparent;
+  border: 1px solid var(--color-line-subtle);
+  color: var(--color-ink-ivory);
+  transition: border-color 250ms ease-out, color 250ms ease-out;
+}
+
+.hero__cta--ghost:hover,
+.hero__cta--ghost:focus-visible {
+  border-color: var(--color-line-strong);
+  color: var(--color-ink-ivory);
+}
+
+.hero__cta-arrow {
+  width: clamp(0.75rem, 0.9vw, 0.875rem);
+  height: clamp(0.75rem, 0.9vw, 0.875rem);
+  transition: transform 250ms ease-out;
+}
+
+.hero__cta:hover .hero__cta-arrow,
+.hero__cta:focus-visible .hero__cta-arrow {
+  transform: translateX(3px);
+}
+
+.hero__trust {
+  display: flex;
+  align-items: center;
+  gap: clamp(1.375rem, 1.45vw, 1.5rem);
+  /* Requested change: shift the whole trust row up exactly 50px. The cluster
+     is bottom-anchored, so growing the SCROLL indicator below would otherwise
+     push this row up by a viewport-dependent extra amount — translateY keeps
+     the displacement at exactly -50px everywhere without reflowing anything. */
+  transform: translateY(-50px);
+  /* The group used to sit inside .hero__left, so re-apply that column's own
+     left inset here to keep the portraits in the exact same horizontal spot
+     now that the row lives in the bottom-left cluster. */
+  margin-left: clamp(1rem, 3vw, 2rem);
+  padding-left: 0.125rem;
+}
+
+.hero__avatars {
+  display: flex;
+  align-items: center;
+}
+
+.hero__avatar {
+  width: clamp(2rem, 2.125vw, 2.125rem);
+  height: clamp(2rem, 2.125vw, 2.125rem);
+  border-radius: 50%;
+  border: 1px solid var(--color-line-subtle);
+  background-color: var(--color-bg-raised);
+  margin-left: -0.75rem;
+  overflow: hidden;
+  flex: 0 0 auto;
+}
+
+.hero__avatar img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 22%;
+}
+
+.hero__avatar:first-child {
+  margin-left: 0;
+  z-index: 1;
+}
+.hero__avatar:nth-child(2) {
+  z-index: 2;
+}
+.hero__avatar:nth-child(3) {
+  z-index: 3;
+}
+.hero__avatar:last-child {
+  z-index: 4;
+}
+
+.hero__trust-text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1875rem;
+}
+
+.hero__trust-title {
+  font-size: clamp(0.75rem, 0.78vw, 0.8125rem);
+  text-transform: none;
+  letter-spacing: 0.01em;
+  font-weight: 400;
+  color: var(--color-ink-soft);
+}
+
+.hero__trust-sub {
+  font-size: clamp(0.6875rem, 0.8vw, 0.75rem);
+  color: var(--color-ink-muted);
+}
+
+/* Bottom-left cluster: the trust group stacked directly above the SCROLL
+   indicator. Both are anchored to the bottom of the stage, which is what keeps
+   the row's distance to the indicator fixed at every viewport height. */
+.hero__lower {
+  position: absolute;
+  left: var(--frame-gutter);
+  /* Bottom-anchor inset ≈ 2.25% vh: the cue sits lower, near the target's
+     bottom region (was 4.25%), while the line and its dot keep a clear,
+     readable margin above the viewport's bottom edge. The gap below is 0: the
+     trust row carries an intentional -50px lift (see .hero__trust), which is
+     what separates the two visually, so the cluster can sit at the correct
+     bottom inset without dragging the trust row up with it. */
+  bottom: clamp(1.25rem, 2.25vh, 2.5rem);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0;
+  z-index: 2;
+}
+
+.hero__scroll {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: clamp(0.8125rem, 1.3vw, 0.9375rem);
+}
+
+.hero__scroll-line {
+  width: 2px;
+  /* The dot sits on the line's lower endpoint and overlaps its final few px.
+     Height was raised ~10px for the "larger SCROLL indicator" request (and
+     thickness 1 -> 2px), keeping the visible line ~38px at the reference view. */
+  height: clamp(2.75rem, 4.5vh, 3rem);
+  background: linear-gradient(
+    to bottom,
+    var(--color-line-muted),
+    var(--color-line-strong)
+  );
+}
+
+.hero__scroll-dot {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 6px;
+  height: 6px;
+  margin-left: -2px;
+  border-radius: 50%;
+  /* A small section indicator, so it takes the mint — not white. */
+  background-color: var(--color-accent);
+}
+
+.hero__scroll-label {
+  margin-top: -0.5rem;
+  font-size: clamp(11px, 0.5vw, 12px);
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--color-ink-muted);
+}
+
+.hero__right {
+  position: absolute;
+  right: clamp(2rem, 5vw, 5rem);
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: clamp(1.25rem, 1.75vw, 1.75rem);
+  z-index: 1;
+}
+
+.hero__descriptor {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: clamp(0.375rem, 0.6vw, 0.625rem);
+  font-size: clamp(9px, 0.5vw, 10px);
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--color-ink-muted);
+}
+
+.hero__descriptor-dash {
+  width: clamp(1.5rem, 2vw, 2rem);
+  height: 1px;
+  background-color: var(--color-line-subtle);
+  margin-top: clamp(0.5rem, 0.8vw, 0.75rem);
+}
+
+.hero__signature {
+  height: clamp(2.75rem, 4.5vw, 4rem);
+  width: auto;
+  opacity: 0.85;
+}
+
+.hero__metrics {
+  position: absolute;
+  /* ANCHORS UNCHANGED: bottom/right offsets stay exactly as designed, so the
+     1.2x enlargement below grows the panel upward and leftward from its
+     established corner instead of drifting it. */
+  bottom: clamp(1.25rem, 2.5vw, 2.5rem);
+  right: clamp(2rem, 5vw, 5rem);
+  display: flex;
+  align-items: center;
+  /* LIVE STATS AT 1.2x — every internal dimension of the panel (column gap,
+     padding, radius and the pieces below) is the previous clamp scaled by
+     1.2, so the whole card and its contents enlarge proportionally together
+     rather than only the frame. Colors, glass, border and blur are untouched:
+     same look, 20% larger. */
+  gap: calc(clamp(1.25rem, 1.75vw, 1.75rem) * 1.2);
+  padding: calc(clamp(0.625rem, 1.25vw, 0.875rem) * 1.2)
+    calc(clamp(1.25rem, 1.75vw, 1.75rem) * 1.2);
+  background-color: rgb(3 5 9 / 40%);
+  border: 1px solid var(--color-line-subtle);
+  border-radius: calc(clamp(0.5rem, 0.8vw, 0.75rem) * 1.2);
+  backdrop-filter: blur(8px);
+}
+
+.hero__metric {
+  display: flex;
+  align-items: center;
+  gap: calc(clamp(0.75rem, 1vw, 1rem) * 1.2);
+}
+
+.hero__metric-value {
+  font-size: calc(clamp(1.25rem, 2vw, 1.5rem) * 1.2);
+  font-weight: 600;
+  color: var(--color-ink-ivory);
+}
+
+.hero__metric-label {
+  display: flex;
+  flex-direction: column;
+  gap: calc(0.125rem * 1.2);
+  font-size: calc(clamp(9px, 0.5vw, 10px) * 1.2);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-ink-muted);
+}
+
+.hero__metric-sep {
+  width: 1px;
+  height: calc(clamp(2.5rem, 3vw, 3rem) * 1.2);
+  background-color: var(--color-line-subtle);
+}

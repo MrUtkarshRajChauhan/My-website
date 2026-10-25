@@ -1,0 +1,1063 @@
+/* ==========================================================================
+   EXPERTISE — scene composition + technology ecosystem
+   --------------------------------------------------------------------------
+   Lives inside the fixed UI layer, out of document flow (so the pinned
+   cinematic scroll distance is untouched). Regions:
+
+     LEFT   · explanatory content lane        ≈ 4.6–31.5vw (spread top→bottom)
+     CENTRE · the protected subject band      ≈ 31.5–54vw  (kept clear)
+     RIGHT  · technology ecosystem            ≈ 54.25–96.2vw
+     STRIP  · Real-World Use Cases workflow   ≈ 34–96.9vw (bottom)
+     RAIL   · five-item progress indicator    ≈ 92.8vw → edge
+
+   All colours, fonts and radii come from the existing design tokens.
+   Everything inside the network field is sized in `cqw` (a fraction of the
+   field's own width), so the constellation scales perfectly on any screen,
+   16:9 or 16:10.
+
+   STACKING (bottom → top):
+     0 · orbits + connectors + junctions + orbs + signal pulses (SVG)
+     2 · category panels
+     3 · logo tiles + names
+     4 · central `</>` code core
+   ========================================================================== */
+
+.expertise-exit {
+  position: absolute;
+  inset: 0;
+}
+
+/* ==========================================================================
+   CLOSING STATEMENT - "Enough talk. / See the work!"
+   --------------------------------------------------------------------------
+   The final beat of the exit, rendered by <ExpertiseExitRunway /> as one fixed
+   full-viewport overlay aligned to the held cinematic scene, which by then has
+   been crossfaded into the static Work background. It is
+   deliberately NOT inside `.expertise-exit`: that wrapper lives inside
+   `.hero-scope`, whose "--hidden" state applies "opacity: 0" the instant Work
+   reaches the fold - which is exactly the progress (p_e = 1) at which this
+   headline must be fully visible. So it is a root-level fixed layer instead
+   (see the note in ExpertiseExitRunway).
+
+   STACKING: --z-cinematic-transition (3) puts it above the persistent static
+   background, the canvas (1) and the cinematic overlay (2), but below Work (3)
+   and the UI layer (3). It does NOT depend on that paint order: Work is
+   transparent, so instead of being covered the headline runs its OWN exit and
+   reaches opacity 0 / visibility hidden before Work's first pixel reaches the
+   fold (see ExpertiseExitRunway). The navbar still paints above both.
+
+   COMPOSITION: the static background is now the environment, so the headline is
+   centred in the viewport - its block centre at 50% of the viewport height. Two
+   deliberate lines, slightly offset from the centred anchor (-6.5vw / +4.5vw)
+   for an editorial asymmetry; "work!" is real italic in the mint accent.
+
+   MOTION: opacity + a small translateY only, written by the runway per beat as
+   a smoothstep over its own fixed reveal window, then multiplied by a matching
+   exit fade after the reading hold (see `STATEMENT_EXIT_START` /
+   `STATEMENT_EXIT_END`). The three beats ("Enough" / "talk." / "See the work!")
+   each own an equal third of the reveal window, so they appear in sequence. The
+   declarations below are the OFF state, so the headline is invisible before its
+   ScrollTrigger is created and after teardown.
+   ========================================================================== */
+
+.expertise-exit-transition {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-cinematic-transition);
+
+  width: 100%;
+  box-sizing: border-box;
+
+  text-align: center;
+  pointer-events: none;
+}
+
+/* Static positioning layer: centres the block at 50% of the viewport height.
+   Kept separate from the motion layer so the runner's translateY can never
+   overwrite this transform. */
+.expertise-exit-transition__copy {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  z-index: 1;
+
+  display: flex;
+  justify-content: center;
+  box-sizing: border-box;
+  padding-inline: clamp(1.5rem, 6vw, 7rem);
+
+  transform: translateY(-50%);
+}
+
+/* Typographic layer only: owns the type roles, never the motion. The scroll
+   controller writes opacity/transform per beat on __beat instead, so the
+   container cannot flip the whole line in and out as one block. */
+.expertise-exit-transition__text {
+  width: 100%;
+  max-width: 84vw;
+  margin: 0;
+
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: clamp(3rem, 8.2vw, 9.5rem);
+  font-weight: 400;
+  font-style: normal;
+  line-height: 0.9;
+  letter-spacing: -0.045em;
+  font-optical-sizing: auto;
+  font-kerning: normal;
+
+  color: var(--color-ink-ivory);
+}
+
+/* One reveal beat = one scroll-controlled unit. inline-block keeps each word's
+   translate from disturbing the line box, so revealing "Enough" before "talk."
+   never makes the second word or the second line jump: every container below is
+   always present in layout. The declarations are the OFF state - beats are
+   invisible before their ScrollTrigger is created and after teardown. */
+.expertise-exit-transition__beat {
+  display: inline-block;
+
+  opacity: 0;
+  visibility: hidden;
+  transform: translate3d(0, 12px, 0);
+
+  will-change: transform, opacity;
+}
+
+/* The two deliberate lines: centred, then offset from the shared anchor.
+   clamp() keeps the asymmetry proportional on desktop and bounded at the
+   extremes; the narrow-width rule below disables it entirely. */
+.expertise-exit-transition__line {
+  display: block;
+}
+
+.expertise-exit-transition__line--one {
+  transform: translateX(clamp(-5rem, -6.5vw, -1.5rem));
+}
+
+.expertise-exit-transition__line--two {
+  transform: translateX(clamp(1rem, 4.5vw, 3.5rem));
+}
+
+/* Selective italic + mint accent on "work!" only. Real italic face. */
+.expertise-exit-transition__accent {
+  font-style: italic;
+  color: var(--color-accent);
+}
+
+.expertise {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  visibility: hidden;
+  /* EXPERTISE-LOCAL ACCENT — a turquoise-green reserved for this scene's LEFT
+     heading emphasis only ("Practical websites." / "Measurable results.").
+     Deliberately a separate token: the global mint keeps every right-side
+     category card, connector, node, tile and the strip's own treatments, the
+     Emerald Noir palette is untouched, and the live-status LED keeps its own
+     distinct colour. */
+  --expertise-accent: #00ddb5;
+}
+
+.expertise.expertise--active {
+  visibility: visible;
+}
+
+/* --------------------------------------------------------------------------
+   LEFT — explanatory content
+   Anchored top AND bottom and spread with space-between, so the three blocks
+   fill the height on 16:9 and 16:10 alike (target: ~20% → ~90% of the screen).
+   -------------------------------------------------------------------------- */
+
+.expertise__left {
+  position: absolute;
+  /* Desktop text anchor: 9vw (was 8.8vw / 10.5rem cap). The 10.8rem cap is the
+     same 9% of the 1920 stage, so the anchor holds 9vw across the desktop range. */
+  --expertise-lane-left: clamp(1.75rem, 9vw, 10.8rem);
+  left: var(--expertise-lane-left);
+  /* The 01 group sits ~3vh lower than before while the persistent hero
+     metadata row (WEBSITE DEVELOPER / separator / BANGALORE, INDIA) keeps its
+     own position above the lane. */
+  top: clamp(5rem, 22.5vh, 16rem);
+  /* Block 02 pulls toward the target's ~70vh start: the bottom inset is
+     reduced from 9.5vh (its last item is bottom-flush), still kept clear of
+     the viewport edge and of the workflow strip band along the bottom. */
+  bottom: clamp(2.5rem, 7.5vh, 8.5rem);
+  width: min(
+    clamp(15.5rem, 24.5vw, 32rem),
+    calc(33.2vw - var(--expertise-lane-left))
+  );
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 0.6rem;
+}
+
+.expertise__clip {
+  width: 100%;
+  /* Never let the flex lane shrink an overflow-hidden lane below its content:
+     a shrunk clip is exactly what used to cut off the paragraph and the
+     principles card. The lane distributes its spare height through the
+     space-between gaps instead. */
+  flex: none;
+  overflow: hidden;
+}
+
+.expertise__clip:last-child .expertise__headline {
+  font-size: clamp(1.3rem, 2.22vw, 2.85rem);
+}
+
+/* Paragraph reading widths — measured from the restored target copy at the
+   reference desktop body size (0.8vw = 15.36px at 1920), so the intro wraps
+   into five natural lines and block 02's paragraph into four (the exact px
+   bounds measured in the live font; below the px floor narrower viewports
+   hand wrapping back to the clip lane, as designed). */
+.expertise__clip:first-child .expertise__para {
+  /* cap covers wide (>1920) stages, where the body size tops out at 1rem */
+  max-width: clamp(15rem, 17.9vw, 22.25rem);
+}
+
+.expertise__clip:last-child .expertise__para {
+  /* cap sits mid-window for the 1rem body size on >1920 stages */
+  max-width: clamp(15rem, 18.1vw, 22.6rem);
+}
+
+.expertise__slide {
+  width: 100%;
+  will-change: transform, opacity;
+}
+
+.expertise__text-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.expertise__meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.4rem;
+}
+
+.expertise__num {
+  display: flex;
+  align-items: center;
+  font-family: var(--font-ui);
+  font-weight: 300;
+  font-size: clamp(0.8125rem, 0.95vw, 1.25rem);
+  line-height: 1;
+  letter-spacing: 0.04em;
+  color: var(--color-ink-soft);
+}
+
+.expertise__num::after {
+  content: '';
+  display: block;
+  width: 1.5em;
+  height: 1px;
+  margin-left: 0.7em;
+  background: currentColor;
+  opacity: 0.6;
+}
+
+.expertise__label {
+  font-family: var(--font-ui);
+  font-size: clamp(0.5rem, 0.5vw, 0.65rem);
+  line-height: 1;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: var(--color-ink-muted);
+}
+
+.expertise__headline {
+  display: flex;
+  flex-direction: column;
+  margin: clamp(0.4rem, 1vh, 0.9rem) 0 0;
+  font-family: 'Playfair Display', Georgia, serif;
+  font-weight: 400;
+  /* ~14% larger than the previous 2.5vw scale; line-height tightened to keep
+     the three-line block the same height. Measured at the enlarged size against
+     the lane width: "Practical websites." (≈8.1em) stays inside the lane's
+     ≈8.5em capacity on every desktop width, so the three intended lines hold. */
+  font-size: clamp(1.5rem, 2.85vw, 3.65rem);
+  line-height: 0.96;
+  letter-spacing: -0.012em;
+  color: var(--color-ink-ivory);
+}
+
+.expertise__accent {
+  color: var(--expertise-accent);
+}
+
+.expertise__para {
+  margin: clamp(0.5rem, 1.2vh, 1rem) 0 0;
+  font-family: var(--font-body);
+  font-size: clamp(0.72rem, 0.8vw, 1rem);
+  line-height: 1.55;
+  color: var(--color-ink-soft);
+}
+
+/* Four principles inside ONE bordered card, one row ----------------------- */
+
+/* --------------------------------------------------------------------------
+   FEATURE-CARD PANEL — the four principle tiles
+   In the target the panel extends FARTHER LEFT than the text column
+   (~4.5vw) and ends near 30vw, so this clip deliberately decouples from the
+   9vw text lane: a negative margin pulls the clip left while its own width
+   keeps the right edge on the target's 30vw line. The panel never enters the
+   subject's centre band, and the slide-over entrance within the clip lane is
+   unaffected. A viewport-proportional min-height keeps the panel in the
+   target's ~14-15vh band with the four cards evenly distributed inside it.
+   -------------------------------------------------------------------------- */
+
+.expertise__left > .expertise__clip:nth-child(2) {
+  margin-left: calc(-1 * (var(--expertise-lane-left) - 4.5vw));
+  width: max(25.5vw, 16rem);
+}
+
+.expertise__principles {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(0.35rem, 0.7vw, 0.9rem);
+  padding: clamp(0.5rem, 0.9vw, 1.1rem);
+  border-radius: var(--radius-md);
+  min-height: clamp(6.5rem, 14.5vh, 9.75rem);
+}
+
+.expertise__principle {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: clamp(0.2rem, 0.5vh, 0.45rem);
+  padding: 0;
+  border: 0;
+  background: none;
+}
+
+.expertise__principle-icon {
+  display: grid;
+  place-items: center;
+  box-sizing: border-box;
+  width: clamp(26px, 2.3vw, 46px);
+  height: clamp(26px, 2.3vw, 46px);
+  margin-bottom: clamp(0.1rem, 0.3vh, 0.3rem);
+  padding: 0;
+  border: 1px solid var(--color-line-emerald);
+  border-radius: clamp(6px, 0.55vw, 10px);
+  background: color-mix(in srgb, var(--color-accent) 7%, transparent);
+  box-shadow: 0 0 10px color-mix(in srgb, var(--color-accent) 12%, transparent);
+  color: var(--color-accent);
+}
+
+.expertise__principle-icon svg {
+  display: block;
+  width: 56%;
+  height: 56%;
+  stroke: currentColor;
+  stroke-width: 1.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.expertise__principle-title {
+  margin: 0;
+  font-family: var(--font-ui);
+  font-size: clamp(0.65rem, 0.78vw, 1rem);
+  font-weight: 500;
+  line-height: 1.15;
+  text-transform: none;
+  letter-spacing: 0.01em;
+  color: var(--color-ink-ivory);
+}
+
+.expertise__principle-text {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: clamp(0.58rem, 0.6vw, 0.8rem);
+  line-height: 1.35;
+  color: var(--color-ink-muted);
+}
+
+/* --------------------------------------------------------------------------
+   RIGHT — technology ecosystem
+   -------------------------------------------------------------------------- */
+
+.expertise__right {
+  position: absolute;
+  /* Target frame: panels span 54.25vw -> 96.2vw (field = 400 units wide). */
+  left: 54.25vw;
+  right: 3.8vw;
+  top: 11vh;
+  /* Leaves room for the workflow strip (bottom offset + strip height + gap). */
+  bottom: calc(clamp(0.75rem, 4vh, 2.6rem) + 7.2rem);
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.expertise__heading {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.4rem;
+  /* "03" sits at 68% of the screen in the target. */
+  padding-left: 32.8%;
+}
+
+.expertise__heading-num {
+  display: flex;
+  align-items: center;
+  font-family: var(--font-ui);
+  font-weight: 300;
+  font-size: clamp(0.8125rem, 0.95vw, 1.25rem);
+  line-height: 1;
+  letter-spacing: 0.04em;
+  color: var(--color-ink-soft);
+}
+
+.expertise__heading-num::after {
+  content: '';
+  display: block;
+  width: 1.5em;
+  height: 1px;
+  margin-left: 0.7em;
+  background: currentColor;
+  opacity: 0.6;
+}
+
+.expertise__heading-label {
+  font-family: var(--font-ui);
+  font-size: clamp(0.5rem, 0.5vw, 0.65rem);
+  line-height: 1;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: var(--color-ink-muted);
+}
+
+.expertise__stage {
+  flex: 1 1 auto;
+  min-height: 0;
+  /* The field hangs from the top (target: field top = 18.3% of the frame)
+     and shrinks with the stage height on shorter windows. */
+  margin-top: 4.2vh;
+  display: grid;
+  place-items: center;
+  container-type: size;
+}
+
+/* The measured network field, locked to the target's proportions (400 x 370).
+   Category groups are top-left percentages of THIS box. */
+.expertise__field {
+  position: relative;
+  aspect-ratio: 400 / 370;
+  width: min(100%, calc(100cqh * 400 / 370));
+  max-height: 100%;
+  container-type: inline-size;
+}
+
+/* Connector network ------------------------------------------------------ */
+
+.expertise__wires {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  opacity: 0;
+}
+
+/* Tilted elliptical orbit rings around the core. */
+.expertise__orbit {
+  fill: none;
+  stroke: color-mix(in srgb, var(--color-accent) 24%, transparent);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+
+.expertise__wire {
+  fill: none;
+  stroke: color-mix(in srgb, var(--color-accent) 18%, transparent);
+  stroke-width: 1;
+  stroke-linecap: round;
+  vector-effect: non-scaling-stroke;
+}
+
+.expertise__wire[data-primary='true'] {
+  stroke: color-mix(in srgb, var(--color-accent) 36%, transparent);
+  stroke-width: 1.3;
+}
+
+.expertise__junction {
+  fill: color-mix(in srgb, var(--color-accent) 55%, var(--color-ink-ivory));
+  stroke: color-mix(in srgb, var(--color-bg-base) 60%, transparent);
+  stroke-width: 0.75;
+  filter: drop-shadow(0 0 3px var(--color-accent-line));
+}
+
+/* Glowing orbs that travel slowly along the orbit rings. */
+.expertise__orb {
+  fill: color-mix(in srgb, var(--color-accent) 70%, var(--color-ink-ivory));
+  stroke: color-mix(in srgb, var(--color-accent) 40%, transparent);
+  stroke-width: 1.5;
+  filter: drop-shadow(0 0 4px var(--color-accent-line))
+    drop-shadow(0 0 10px var(--color-accent-soft));
+}
+
+.expertise__pulse {
+  fill: color-mix(in srgb, var(--color-accent) 92%, var(--color-ink-ivory));
+  opacity: 0;
+  filter: drop-shadow(0 0 4px var(--color-accent-line));
+}
+
+/* Central glass code core — a tilted, extruded glass block --------------- */
+
+.expertise__core {
+  --core-tilt: perspective(90cqw) rotateY(-9deg) rotateX(4deg);
+  position: absolute;
+  z-index: 3;
+  display: grid;
+  place-items: center;
+  opacity: 0;
+  isolation: isolate;
+}
+
+.expertise__core-back,
+.expertise__core-plane {
+  position: absolute;
+  inset: 0;
+  border-radius: clamp(10px, 3cqw, 26px);
+  border: 1px solid var(--color-line-emerald);
+  background: color-mix(in srgb, var(--color-bg-deep) 80%, transparent);
+  pointer-events: none;
+}
+
+.expertise__core-back {
+  transform: var(--core-tilt) translate(9%, 8%);
+  opacity: 0.45;
+  box-shadow: 0 0 20px var(--color-accent-soft);
+}
+
+.expertise__core-plane {
+  transform: var(--core-tilt) translate(4.5%, 4%);
+  opacity: 0.8;
+}
+
+.expertise__core-face {
+  position: absolute;
+  inset: 0;
+  transform: var(--core-tilt);
+  border-radius: clamp(10px, 3cqw, 26px);
+  border: 1.5px solid color-mix(in srgb, var(--color-accent) 90%, transparent);
+  background: linear-gradient(
+    160deg,
+    color-mix(in srgb, var(--color-bg-raised) 92%, transparent) 0%,
+    color-mix(in srgb, var(--color-bg-deep) 96%, transparent) 100%
+  );
+  /* The two hard offset shadows are the block's visible thickness. */
+  box-shadow:
+    0.9cqw 0.7cqw 0 color-mix(in srgb, var(--color-accent) 46%, var(--color-bg-deep)),
+    1.7cqw 1.3cqw 0 color-mix(in srgb, var(--color-accent) 24%, var(--color-bg-deep)),
+    0 0 24px var(--color-accent-soft),
+    0 0 56px color-mix(in srgb, var(--color-accent) 14%, transparent),
+    inset 0 0 30px color-mix(in srgb, var(--color-accent) 12%, transparent);
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.expertise__core-face::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  clip-path: polygon(0 0, 100% 0, 100% 20%, 0 38%);
+  background: linear-gradient(
+    120deg,
+    color-mix(in srgb, var(--color-accent) 22%, transparent) 0%,
+    transparent 72%
+  );
+}
+
+.expertise__core-face::after {
+  content: '';
+  position: absolute;
+  left: 11%;
+  top: 9%;
+  width: 24%;
+  height: 1.5px;
+  border-radius: 2px;
+  background: color-mix(in srgb, var(--color-accent) 80%, transparent);
+  box-shadow: 0 0 8px var(--color-accent-line);
+}
+
+.expertise__core-glyph {
+  position: relative;
+  z-index: 1;
+  transform: var(--core-tilt);
+  font-family: var(--font-mono);
+  font-size: clamp(16px, 7.4cqw, 90px);
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: -0.04em;
+  color: var(--color-accent);
+  text-shadow:
+    0 0 12px var(--color-accent-soft),
+    0 0 26px var(--color-accent-soft);
+}
+
+/* Category panels --------------------------------------------------------
+   Panel boxes come from the measured target (percent of the field). They are
+   border-box so the box IS the percentage, and `min-height: min-content` only
+   lets a panel grow if its copy ever needs more room (nothing can overlap). */
+
+.expertise__cat {
+  position: absolute;
+  z-index: 2;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  padding: 2.3cqw 2.5cqw 2.3cqw;
+  border: 1px solid var(--color-line-emerald);
+  border-radius: clamp(6px, 2.4cqw, 24px);
+  background: color-mix(in srgb, var(--color-bg-base) 70%, transparent);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  box-shadow: inset 0 0 22px color-mix(in srgb, var(--color-accent) 5%, transparent);
+  min-height: min-content;
+  opacity: 0;
+}
+
+.expertise__cat-head {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35cqw;
+  flex: none;
+}
+
+.expertise__cat-label {
+  display: flex;
+  align-items: center;
+  gap: 1cqw;
+  font-family: var(--font-ui);
+  font-size: clamp(6px, 1.7cqw, 16px);
+  font-weight: 600;
+  line-height: 1.1;
+  white-space: nowrap;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: color-mix(in srgb, var(--color-ink-ivory) 96%, transparent);
+}
+
+.expertise__cat-label::before {
+  content: '';
+  flex: none;
+  width: clamp(3px, 0.95cqw, 9px);
+  height: clamp(3px, 0.95cqw, 9px);
+  border-radius: 50%;
+  background: var(--color-accent);
+  box-shadow: 0 0 6px var(--color-accent-line);
+}
+
+.expertise__cat-desc {
+  /* Indented to line up with the label text (past the bullet), as in the target. */
+  padding-left: calc(clamp(3px, 0.95cqw, 9px) + 1cqw);
+  max-width: 100%;
+  font-family: var(--font-body);
+  font-size: clamp(5px, 1.5cqw, 15px);
+  line-height: 1.3;
+  white-space: pre-line; /* line breaks come from the data, exactly as in the target */
+  color: var(--color-ink-muted);
+}
+
+.expertise__cat-tiles {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 3.2cqw;
+  /* Tiles sit at the BOTTOM of every panel, whatever its height. */
+  margin-top: auto;
+  flex: none;
+}
+
+/* Technology tiles ------------------------------------------------------- */
+
+.expertise__tile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6cqw;
+  flex: none;
+  will-change: transform;
+  opacity: 0;
+  pointer-events: auto;
+}
+
+.expertise__tile:hover {
+  /* border/background change moved onto the logo box below */
+}
+
+.expertise__tile-logo {
+  display: block;
+  box-sizing: border-box;
+  /* The box wraps the logo only; the name sits BELOW it (target). */
+  width: clamp(24px, 8.8cqw, 80px);
+  height: clamp(24px, 8.8cqw, 80px);
+  padding: 1.9cqw;
+  object-fit: contain;
+  /* Neutral hairline: this box frames an authentic technology logo, so it
+     stays out of the mint budget entirely. */
+  border: 1px solid var(--color-line-subtle);
+  border-radius: clamp(5px, 1.7cqw, 16px);
+  background: color-mix(in srgb, var(--color-bg-deep) 72%, transparent);
+  transition: border-color 180ms ease, background-color 180ms ease;
+}
+
+.expertise__tile-name {
+  font-family: var(--font-ui);
+  font-size: clamp(4.5px, 1.6cqw, 15px);
+  font-weight: 500;
+  line-height: 1.1;
+  white-space: nowrap;
+  letter-spacing: 0.01em;
+  color: color-mix(in srgb, var(--color-ink-ivory) 92%, transparent);
+}
+
+.expertise__tile:hover .expertise__tile-logo {
+  border-color: color-mix(in srgb, var(--color-accent) 55%, transparent);
+  background: color-mix(in srgb, var(--color-bg-raised) 88%, transparent);
+}
+
+/* Four tiles sit closer together than two (target spacing). */
+.expertise__cat[data-cluster='frontend'] .expertise__cat-tiles {
+  gap: 1.4cqw;
+}
+
+/* Glowing corner bead on every panel's top-left corner (target detail). */
+.expertise__cat::before {
+  content: '';
+  position: absolute;
+  left: 0.3cqw;
+  top: 0.3cqw;
+  width: 1.1cqw;
+  height: 1.1cqw;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--color-accent) 85%, var(--color-ink-ivory));
+  box-shadow: 0 0 6px var(--color-accent-line), 0 0 12px var(--color-accent-soft);
+  pointer-events: none;
+}
+
+/* Bottom workflow strip -------------------------------------------------- */
+
+.expertise__workflow {
+  position: absolute;
+  /* Target proportions: 33.5vw -> 97.5vw horizontally, bottom edge 3.5vh
+     above the viewport edge and a ~8.5vh strip height (top edge ~88vh). The
+     stage/arrow offsets are percentages of this box, so they redistribute
+     across the widened strip automatically. */
+  left: 33.5vw;
+  right: 2.5vw;
+  bottom: clamp(0.75rem, 3.5vh, 2.6rem);
+  display: flex;
+  align-items: center;
+  gap: clamp(0.6rem, 1.3vw, 1.6rem);
+  /* Top/bottom padding is the base rhythm +3px; left/right unchanged. */
+  padding: clamp(calc(0.45rem + 3px), calc(0.9vh + 3px), calc(0.8rem + 3px))
+    clamp(0.6rem, 0.9vw, 1.2rem);
+  border: 1px solid var(--color-line-subtle);
+  border-radius: var(--radius-md);
+  background: color-mix(in srgb, var(--color-bg-deep) 68%, transparent);
+  box-sizing: border-box;
+  /* Stages are absolutely placed, so the strip height is set here
+     (target: top edge ≈ 88vh, i.e. ~8.5vh of strip at the 16:9 stage). */
+  min-height: clamp(4.5rem, 8.5vh, 6.5rem);
+}
+
+.expertise__wf-head {
+  --wf-icon: clamp(1.9rem, 2.7vw, 3.6rem);
+  position: relative;
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.2rem;
+  min-height: var(--wf-icon);
+  padding-left: calc(var(--wf-icon) + 0.8rem);
+  margin: 0;
+}
+
+.expertise__wf-head::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: var(--wf-icon);
+  height: var(--wf-icon);
+  transform: translateY(-50%);
+  box-sizing: border-box;
+  border: 1px solid var(--color-line-emerald);
+  border-radius: clamp(5px, 0.5vw, 9px);
+  background: color-mix(in srgb, var(--color-accent) 7%, transparent);
+  box-shadow: 0 0 10px color-mix(in srgb, var(--color-accent) 12%, transparent);
+}
+
+.expertise__wf-head::after {
+  content: '';
+  position: absolute;
+  left: calc(var(--wf-icon) * 0.24);
+  top: 50%;
+  width: calc(var(--wf-icon) * 0.52);
+  height: calc(var(--wf-icon) * 0.52);
+  transform: translateY(-50%);
+  background: var(--color-accent);
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.5'%3E%3Crect x='3' y='3' width='7' height='7' rx='1.5'/%3E%3Crect x='14' y='3' width='7' height='7' rx='1.5'/%3E%3Crect x='3' y='14' width='7' height='7' rx='1.5'/%3E%3Crect x='14' y='14' width='7' height='7' rx='1.5'/%3E%3C/svg%3E") center / contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.5'%3E%3Crect x='3' y='3' width='7' height='7' rx='1.5'/%3E%3Crect x='14' y='3' width='7' height='7' rx='1.5'/%3E%3Crect x='3' y='14' width='7' height='7' rx='1.5'/%3E%3Crect x='14' y='14' width='7' height='7' rx='1.5'/%3E%3C/svg%3E") center / contain no-repeat;
+}
+
+.expertise__wf-title {
+  margin: 0;
+  font-family: var(--font-ui);
+  font-weight: 500;
+  font-size: clamp(0.7rem, 0.78vw, 1rem);
+  line-height: 1.15;
+  white-space: nowrap;
+  color: var(--color-ink-ivory);
+}
+
+.expertise__wf-sub {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: clamp(7.5px, 0.63vw, 12px);
+  line-height: 1.3;
+  white-space: nowrap;
+  color: var(--color-ink-muted);
+}
+
+.expertise__wf-stages {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  flex: 1 1 auto;
+  min-width: 0;
+  /* Stages and arrows are pinned at the target's measured x positions
+     (percent of the strip), so they never drift with text width. They are
+     positioned against .expertise__workflow, which is position: absolute. */
+}
+
+.expertise__wf-stage {
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(2px, 0.4vh, 5px);
+  text-align: center;
+}
+
+.expertise__wf-mark {
+  flex: none;
+  display: block;
+  box-sizing: border-box;
+  width: clamp(22px, 2.3vw, 38px);
+  height: clamp(22px, 2.3vw, 38px);
+  padding: clamp(3px, 0.35vw, 6px);
+  object-fit: contain;
+  /* Neutral hairline: frames a brand mark, never mint-tinted. */
+  border: 1px solid var(--color-line-subtle);
+  border-radius: clamp(5px, 0.5vw, 9px);
+  background: color-mix(in srgb, var(--color-bg-deep) 72%, transparent);
+}
+
+.expertise__wf-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.expertise__wf-label {
+  font-family: var(--font-ui);
+  font-size: clamp(7.5px, 0.56vw, 11px);
+  line-height: 1.15;
+  letter-spacing: 0.03em;
+  color: var(--color-ink-ivory);
+}
+
+.expertise__wf-tool {
+  font-family: var(--font-body);
+  font-size: clamp(6.5px, 0.5vw, 10px);
+  line-height: 1.2;
+  white-space: nowrap;
+  color: var(--color-ink-muted);
+}
+
+/* Tool names read "(Figma)", "(React / Next.js)" as in the target. */
+.expertise__wf-tool::before {
+  content: '(';
+}
+.expertise__wf-tool::after {
+  content: ')';
+}
+
+.expertise__wf-arrow {
+  position: absolute;
+  top: 41%;
+  flex: none;
+  width: clamp(6px, 0.52vw, 10px);
+  height: clamp(6px, 0.52vw, 10px);
+  border-top: 1.5px solid color-mix(in srgb, var(--color-accent) 88%, transparent);
+  border-right: 1.5px solid color-mix(in srgb, var(--color-accent) 88%, transparent);
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+
+/* Measured positions (centre of each stage / arrow, % of the strip width).
+   Children alternate stage, arrow, stage, arrow ... stage. */
+.expertise__wf-stages > :nth-child(1)  { left: 36.2%; }
+.expertise__wf-stages > :nth-child(2)  { left: 40.3%; }
+.expertise__wf-stages > :nth-child(3)  { left: 44.6%; }
+.expertise__wf-stages > :nth-child(4)  { left: 49.8%; }
+.expertise__wf-stages > :nth-child(5)  { left: 54.6%; }
+.expertise__wf-stages > :nth-child(6)  { left: 59.2%; }
+.expertise__wf-stages > :nth-child(7)  { left: 68.4%; }
+.expertise__wf-stages > :nth-child(8)  { left: 78.1%; }
+.expertise__wf-stages > :nth-child(9)  { left: 83%; }
+.expertise__wf-stages > :nth-child(10) { left: 88.6%; }
+.expertise__wf-stages > :nth-child(11) { left: 94.1%; }
+
+/* --------------------------------------------------------------------------
+   RIGHT-EDGE PROGRESS RAIL — line on the left, labels read to the right.
+   -------------------------------------------------------------------------- */
+
+.expertise__xrail {
+  --xrail-mint: var(--color-accent);
+  --xrail-line: color-mix(in srgb, var(--color-ink-muted) 34%, transparent);
+  --xrail-inactive: color-mix(in srgb, var(--color-ink-muted) 55%, transparent);
+
+  position: absolute;
+  left: 92.8vw;
+  top: 37vh;
+  z-index: 5;
+  transform: translateY(-50%);
+  opacity: 0;
+  transition: opacity 420ms ease;
+}
+
+.expertise--active .expertise__xrail {
+  opacity: 1;
+}
+
+.expertise__xrail-line {
+  position: absolute;
+  left: 0;
+  top: 0.05rem;
+  bottom: 0.05rem;
+  width: 1px;
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    var(--xrail-line) 12%,
+    var(--xrail-line) 88%,
+    transparent 100%
+  );
+}
+
+.expertise__xrail-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: clamp(1rem, 3.8vh, 2.5rem);
+}
+
+.expertise__xrail-item {
+  position: relative;
+  display: flex;
+  justify-content: flex-start;
+  padding-left: 0.95rem;
+  font-family: var(--font-ui);
+  font-size: clamp(7px, 0.52vw, 10.5px);
+  line-height: 1;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-ink-faint);
+  transition: color 320ms ease;
+}
+
+.expertise__xrail-label {
+  display: block;
+  white-space: nowrap;
+}
+
+.expertise__xrail-dot {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--xrail-inactive);
+  transform: translate(-50%, -50%) scale(0.75);
+  transition:
+    background 320ms ease,
+    transform 320ms ease,
+    box-shadow 320ms ease,
+    opacity 320ms ease;
+  opacity: 0.8;
+}
+
+.expertise__xrail-item[data-state='active'] {
+  color: var(--xrail-mint);
+  text-shadow: 0 0 7px color-mix(in srgb, var(--color-accent) 22%, transparent);
+}
+
+.expertise__xrail-item[data-state='active'] .expertise__xrail-dot {
+  width: 6px;
+  height: 6px;
+  background: var(--xrail-mint);
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+  box-shadow:
+    0 0 6px var(--color-accent-line),
+    0 0 14px var(--color-accent-soft);
+}
+
+/* --------------------------------------------------------------------------
+   NARROW WIDTHS
+   -------------------------------------------------------------------------- */
+@media (max-width: 1279px) {
+  .expertise__cat-label {
+    font-size: clamp(5px, 1.4cqw, 12px);
+    letter-spacing: 0.03em;
+  }
+  .expertise__xrail-item {
+    letter-spacing: 0.06em;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   REDUCED MOTION
+   -------------------------------------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .expertise__tile {
+    will-change: auto;
+    transition: none;
+  }
+  .expertise__xrail,
+  .expertise__xrail-item,
+  .expertise__xrail-dot {
+    transition: none;
+  }
+  /* The closing statement keeps its reveal (opacity, driven by the same p_e) but
+     drops the travel: the runner also forces identity here, so this just keeps
+     the OFF state and the pre-trigger state free of displacement too. */
+  .expertise-exit-transition__beat {
+    transform: none;
+    will-change: auto;
+  }
+}

@@ -1,0 +1,575 @@
+
+> my-website@1.0.0 dev
+> vite --host 127.0.0.1 --port 5173
+
+[33m(!) Your Vite config uses features that are unsupported by `configLoader: 'native'`, which is planned to become the default in a future major version of Vite:
+  - ESM syntax in a file loaded as CommonJS (vite.config.ts:1:1). Use a `.mjs` extension or set `"type": "module"` in the closest package.json
+Set `VITE_CONFIG_NATIVE_IGNORE_WARNING=true` to suppress this warning.[39m
+
+  [32m[1mVITE[22m v8.3.1[39m  [2mready in [0m[1m205[22m[2m[0m ms[22m
+
+  [32m➜[39m  [1mLocal[22m:   [36mhttp://127.0.0.1:[1m5173[22m/[39m
+[2m[32m  ➜[39m[22m[2m  press [22m[1mh + enter[22m[2m to show help[22m
+[2m6:38:01 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/CinematicCanvas.tsx[22m
+[2m6:57:52 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/CinematicCanvas.tsx[22m
+[2m6:58:15 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/CinematicCanvas.tsx[22m
+[2m6:58:18 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/CinematicCanvas.tsx[22m
+[2m6:58:55 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/CinematicCanvas.tsx[22m
+[2m6:58:59 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/CinematicCanvas.tsx[22m
+[2m7:11:36 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/main.tsx[22m
+[2m7:11:41 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css[22m
+[2m7:24:23 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css[22m
+[2m7:24:27 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css[22m
+[2m7:24:30 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css[22m
+[2m7:25:00 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css[22m
+[2m7:25:03 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css[22m
+[2m7:26:39 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css[22m
+[2m7:33:24 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/main.tsx[22m
+[2m7:33:25 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mdependency optimized: [33mlenis[32m[39m
+[2m7:33:25 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32moptimized dependencies changed. reloading[39m
+[2m7:33:28 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/main.tsx[22m
+[2m8:15:38 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/CinematicCanvas.tsx[22m
+[2m8:46:47 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/CinematicCanvas.tsx[22m
+[2m9:33:22 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/CinematicCanvas.tsx[22m
+[2m9:33:22 pm[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [31m[Unhandled error] [1mNotFoundError[22m: Failed to execute 'removeChild' on 'Node': The node to be removed is not a child of this node.
+[39m > removeChildFromContainer node_modules/react-dom/cjs/react-dom-client.development.js:23987:8
+ > runWithFiberInDEV node_modules/react-dom/cjs/react-dom-client.development.js:1045:29
+ > commitDeletionEffectsOnFiber node_modules/react-dom/cjs/react-dom-client.development.js:15499:16
+ > recursivelyTraverseDeletionEffects node_modules/react-dom/cjs/react-dom-client.development.js:15409:8
+ > commitDeletionEffectsOnFiber node_modules/react-dom/cjs/react-dom-client.development.js:15573:10
+ > recursivelyTraverseMutationEffects node_modules/react-dom/cjs/react-dom-client.development.js:15773:10
+ > commitMutationEffectsOnFiber node_modules/react-dom/cjs/react-dom-client.development.js:16293:10
+ > recursivelyTraverseMutationEffects node_modules/react-dom/cjs/react-dom-client.development.js:15794:10
+ > commitMutationEffectsOnFiber node_modules/react-dom/cjs/react-dom-client.development.js:16111:10
+ > flushMutationEffects node_modules/react-dom/cjs/react-dom-client.development.js:19680:12
+
+[2m9:33:22 pm[22m [33m[1m[vite][22m[39m [33m[2m(client)[22m[39m [2m[console.warn] [22mAn error occurred in the <canvas> component.
+
+Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://react.dev/link/error-boundaries to learn more about error boundaries.
+
+[2m9:33:31 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/CinematicCanvas.tsx[22m
+[2m9:34:04 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/CinematicCanvas.tsx[22m
+[2m10:10:18 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/smoothScroll.ts[22m
+[2m10:16:35 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/smoothScroll.ts[22m
+[2m10:20:17 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/CinematicCanvas.tsx[22m
+[2m10:20:23 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/CinematicCanvas.tsx[22m
+[2m10:21:50 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/CinematicCanvas.tsx[22m
+[2m10:21:55 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/CinematicCanvas.tsx[22m
+[2m10:22:43 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/CinematicCanvas.tsx[22m
+[2m10:22:48 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/CinematicCanvas.tsx[22m
+[2m10:22:51 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/CinematicCanvas.tsx[22m
+[2m10:22:55 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/CinematicCanvas.tsx[22m
+[2m10:35:35 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/CinematicCanvas.tsx[22m
+[2m10:42:05 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/CinematicCanvas.tsx[22m
+[2m10:42:09 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/CinematicCanvas.tsx[22m
+[2m10:42:14 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/CinematicCanvas.tsx[22m
+[2m10:42:17 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/CinematicCanvas.tsx[22m
+[2m10:42:18 pm[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [31m[Unhandled error] [1mNotFoundError[22m: Failed to execute 'removeChild' on 'Node': The node to be removed is not a child of this node.
+[39m > removeChildFromContainer node_modules/react-dom/cjs/react-dom-client.development.js:23987:8
+ > runWithFiberInDEV node_modules/react-dom/cjs/react-dom-client.development.js:1045:29
+ > commitDeletionEffectsOnFiber node_modules/react-dom/cjs/react-dom-client.development.js:15499:16
+ > recursivelyTraverseDeletionEffects node_modules/react-dom/cjs/react-dom-client.development.js:15409:8
+ > commitDeletionEffectsOnFiber node_modules/react-dom/cjs/react-dom-client.development.js:15573:10
+ > recursivelyTraverseMutationEffects node_modules/react-dom/cjs/react-dom-client.development.js:15773:10
+ > commitMutationEffectsOnFiber node_modules/react-dom/cjs/react-dom-client.development.js:16293:10
+ > recursivelyTraverseMutationEffects node_modules/react-dom/cjs/react-dom-client.development.js:15794:10
+ > commitMutationEffectsOnFiber node_modules/react-dom/cjs/react-dom-client.development.js:16111:10
+ > flushMutationEffects node_modules/react-dom/cjs/react-dom-client.development.js:19680:12
+
+[2m10:42:18 pm[22m [33m[1m[vite][22m[39m [33m[2m(client)[22m[39m [2m[console.warn] [22mAn error occurred in the <canvas> component.
+
+Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://react.dev/link/error-boundaries to learn more about error boundaries.
+
+[2m10:42:18 pm[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [31m[Unhandled error] [1mNotFoundError[22m: Failed to execute 'removeChild' on 'Node': The node to be removed is not a child of this node.
+[39m > removeChildFromContainer node_modules/react-dom/cjs/react-dom-client.development.js:23987:8
+ > runWithFiberInDEV node_modules/react-dom/cjs/react-dom-client.development.js:1045:29
+ > commitDeletionEffectsOnFiber node_modules/react-dom/cjs/react-dom-client.development.js:15499:16
+ > recursivelyTraverseDeletionEffects node_modules/react-dom/cjs/react-dom-client.development.js:15409:8
+ > commitDeletionEffectsOnFiber node_modules/react-dom/cjs/react-dom-client.development.js:15573:10
+ > recursivelyTraverseMutationEffects node_modules/react-dom/cjs/react-dom-client.development.js:15773:10
+ > commitMutationEffectsOnFiber node_modules/react-dom/cjs/react-dom-client.development.js:16293:10
+ > recursivelyTraverseMutationEffects node_modules/react-dom/cjs/react-dom-client.development.js:15794:10
+ > commitMutationEffectsOnFiber node_modules/react-dom/cjs/react-dom-client.development.js:16111:10
+ > flushMutationEffects node_modules/react-dom/cjs/react-dom-client.development.js:19680:12
+
+[2m10:42:18 pm[22m [33m[1m[vite][22m[39m [33m[2m(client)[22m[39m [2m[console.warn] [22mAn error occurred in the <canvas> component.
+
+Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://react.dev/link/error-boundaries to learn more about error boundaries.
+
+[2m10:47:45 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/smoothScroll.ts[22m
+[2m11:13:31 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/smoothScroll.ts[22m
+[2m11:17:01 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/smoothScroll.ts[22m
+[2m11:21:16 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/CinematicCanvas.tsx[22m
+[2m11:21:18 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/CinematicCanvas.tsx[22m
+[2m11:21:28 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/smoothScroll.ts[22m
+[2m11:21:32 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/CinematicCanvas.tsx[22m
+[2m11:23:27 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/CinematicCanvas.tsx[22m
+[2m11:23:31 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/CinematicCanvas.tsx[22m
+[2m12:40:11 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/main.tsx[22m
+[2m12:40:12 pm[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [31m[Unhandled error] [1mReferenceError[22m: CinematicCanvas is not defined
+[39m > src/main.tsx:19:5
+    17 |  createRoot(rootElement).render(
+    18 |    <React.StrictMode>
+    19 |      <CinematicCanvas />
+       |       ^
+    20 |      <div className="cinematic-overlay" aria-hidden="true" />
+    21 |    </React.StrictMode>
+
+[2m12:40:16 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/main.tsx[22m
+[2m12:40:27 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css[22m
+[2m12:43:43 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css[22m
+[2m12:45:25 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css[22m
+[2m1:04:56 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css[22m
+[2m1:05:25 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css[22m
+[2m1:05:45 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/ui/UIOverlay.tsx[22m
+[2m1:05:53 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/App.tsx[22m
+[2m1:07:26 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/ui/Navbar.tsx[22m
+[2m1:07:33 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css[22m
+[2m2:05:35 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css[22m
+[2m2:05:48 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css[22m
+[2m2:06:56 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css[22m
+[2m2:06:59 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css[22m
+[2m2:48:26 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/CinematicCanvas.tsx[22m
+[2m2:48:26 pm[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [31m[Unhandled error] [1mNotFoundError[22m: Failed to execute 'removeChild' on 'Node': The node to be removed is not a child of this node.
+[39m > removeChildFromContainer node_modules/react-dom/cjs/react-dom-client.development.js:23987:8
+ > runWithFiberInDEV node_modules/react-dom/cjs/react-dom-client.development.js:1045:29
+ > commitDeletionEffectsOnFiber node_modules/react-dom/cjs/react-dom-client.development.js:15499:16
+ > recursivelyTraverseDeletionEffects node_modules/react-dom/cjs/react-dom-client.development.js:15409:8
+ > commitDeletionEffectsOnFiber node_modules/react-dom/cjs/react-dom-client.development.js:15573:10
+ > recursivelyTraverseMutationEffects node_modules/react-dom/cjs/react-dom-client.development.js:15773:10
+ > commitMutationEffectsOnFiber node_modules/react-dom/cjs/react-dom-client.development.js:15819:10
+ > recursivelyTraverseMutationEffects node_modules/react-dom/cjs/react-dom-client.development.js:15794:10
+ > commitMutationEffectsOnFiber node_modules/react-dom/cjs/react-dom-client.development.js:16293:10
+ > recursivelyTraverseMutationEffects node_modules/react-dom/cjs/react-dom-client.development.js:15794:10
+
+[2m2:48:26 pm[22m [33m[1m[vite][22m[39m [33m[2m(client)[22m[39m [2m[console.warn] [22mAn error occurred in the <canvas> component.
+
+Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://react.dev/link/error-boundaries to learn more about error boundaries.
+
+[2m2:48:35 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/CinematicCanvas.tsx[22m
+[2m2:48:42 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/CinematicCanvas.tsx[22m
+[2m2:48:42 pm[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [31m[Unhandled error] [1mNotFoundError[22m: Failed to execute 'removeChild' on 'Node': The node to be removed is not a child of this node.
+[39m > removeChildFromContainer node_modules/react-dom/cjs/react-dom-client.development.js:23987:8
+ > runWithFiberInDEV node_modules/react-dom/cjs/react-dom-client.development.js:1045:29
+ > commitDeletionEffectsOnFiber node_modules/react-dom/cjs/react-dom-client.development.js:15499:16
+ > recursivelyTraverseDeletionEffects node_modules/react-dom/cjs/react-dom-client.development.js:15409:8
+ > commitDeletionEffectsOnFiber node_modules/react-dom/cjs/react-dom-client.development.js:15573:10
+ > recursivelyTraverseMutationEffects node_modules/react-dom/cjs/react-dom-client.development.js:15773:10
+ > commitMutationEffectsOnFiber node_modules/react-dom/cjs/react-dom-client.development.js:15819:10
+ > recursivelyTraverseMutationEffects node_modules/react-dom/cjs/react-dom-client.development.js:15794:10
+ > commitMutationEffectsOnFiber node_modules/react-dom/cjs/react-dom-client.development.js:16293:10
+ > recursivelyTraverseMutationEffects node_modules/react-dom/cjs/react-dom-client.development.js:15794:10
+
+[2m2:48:42 pm[22m [33m[1m[vite][22m[39m [33m[2m(client)[22m[39m [2m[console.warn] [22mAn error occurred in the <canvas> component.
+
+Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://react.dev/link/error-boundaries to learn more about error boundaries.
+
+[2m2:48:46 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/CinematicCanvas.tsx[22m
+[2m2:48:50 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/CinematicCanvas.tsx[22m
+[2m2:48:51 pm[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [31m[Unhandled error] [1mNotFoundError[22m: Failed to execute 'removeChild' on 'Node': The node to be removed is not a child of this node.
+[39m > removeChildFromContainer node_modules/react-dom/cjs/react-dom-client.development.js:23987:8
+ > runWithFiberInDEV node_modules/react-dom/cjs/react-dom-client.development.js:1045:29
+ > commitDeletionEffectsOnFiber node_modules/react-dom/cjs/react-dom-client.development.js:15499:16
+ > recursivelyTraverseDeletionEffects node_modules/react-dom/cjs/react-dom-client.development.js:15409:8
+ > commitDeletionEffectsOnFiber node_modules/react-dom/cjs/react-dom-client.development.js:15573:10
+ > recursivelyTraverseMutationEffects node_modules/react-dom/cjs/react-dom-client.development.js:15773:10
+ > commitMutationEffectsOnFiber node_modules/react-dom/cjs/react-dom-client.development.js:15819:10
+ > recursivelyTraverseMutationEffects node_modules/react-dom/cjs/react-dom-client.development.js:15794:10
+ > commitMutationEffectsOnFiber node_modules/react-dom/cjs/react-dom-client.development.js:16293:10
+ > recursivelyTraverseMutationEffects node_modules/react-dom/cjs/react-dom-client.development.js:15794:10
+
+[2m2:48:51 pm[22m [33m[1m[vite][22m[39m [33m[2m(client)[22m[39m [2m[console.warn] [22mAn error occurred in the <canvas> component.
+
+Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://react.dev/link/error-boundaries to learn more about error boundaries.
+
+[2m2:48:51 pm[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [31m[Unhandled error] [1mReferenceError[22m: renderRequestRef is not defined
+[39m > src/CinematicCanvas.tsx:363:6
+    361 |    useEffect(() => {
+    362 |      return () => {
+    363 |        if (renderRequestRef.current) {
+        |        ^
+    364 |          cancelAnimationFrame(renderRequestRef.current)
+    365 |        }
+ > Object.react_stack_bottom_frame node_modules/react-dom/cjs/react-dom-client.development.js:28668:12
+ > runWithFiberInDEV node_modules/react-dom/cjs/react-dom-client.development.js:1045:29
+ > commitHookEffectListUnmount node_modules/react-dom/cjs/react-dom-client.development.js:13815:16
+ > commitHookPassiveUnmountEffects node_modules/react-dom/cjs/react-dom-client.development.js:13846:10
+ > disconnectPassiveEffect node_modules/react-dom/cjs/react-dom-client.development.js:17706:10
+ > doubleInvokeEffectsOnFiber node_modules/react-dom/cjs/react-dom-client.development.js:20404:10
+ > runWithFiberInDEV node_modules/react-dom/cjs/react-dom-client.development.js:1045:29
+ > recursivelyTraverseAndDoubleInvokeEffectsInDEV node_modules/react-dom/cjs/react-dom-client.development.js:20370:16
+ > recursivelyTraverseAndDoubleInvokeEffectsInDEV node_modules/react-dom/cjs/react-dom-client.development.js:20376:16
+
+[2m2:48:51 pm[22m [33m[1m[vite][22m[39m [33m[2m(client)[22m[39m [2m[console.warn] [22mAn error occurred in the <CinematicCanvas> component.
+
+Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://react.dev/link/error-boundaries to learn more about error boundaries.
+
+[2m2:48:51 pm[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [31m[Unhandled error] [1mReferenceError[22m: renderRequestRef is not defined
+[39m > src/CinematicCanvas.tsx:363:6
+    361 |    useEffect(() => {
+    362 |      return () => {
+    363 |        if (renderRequestRef.current) {
+        |        ^
+    364 |          cancelAnimationFrame(renderRequestRef.current)
+    365 |        }
+ > Object.react_stack_bottom_frame node_modules/react-dom/cjs/react-dom-client.development.js:28668:12
+ > runWithFiberInDEV node_modules/react-dom/cjs/react-dom-client.development.js:1045:29
+ > commitHookEffectListUnmount node_modules/react-dom/cjs/react-dom-client.development.js:13815:16
+ > commitHookPassiveUnmountEffects node_modules/react-dom/cjs/react-dom-client.development.js:13846:10
+ > commitPassiveUnmountEffectsInsideOfDeletedTree_begin node_modules/react-dom/cjs/react-dom-client.development.js:17754:12
+ > recursivelyTraversePassiveUnmountEffects node_modules/react-dom/cjs/react-dom-client.development.js:17575:12
+ > commitPassiveUnmountOnFiber node_modules/react-dom/cjs/react-dom-client.development.js:17617:10
+ > flushPassiveEffects node_modules/react-dom/cjs/react-dom-client.development.js:20130:8
+ > flushPendingEffects node_modules/react-dom/cjs/react-dom-client.development.js:20060:13
+
+[2m2:48:51 pm[22m [33m[1m[vite][22m[39m [33m[2m(client)[22m[39m [2m[console.warn] [22mAn error occurred in the <CinematicCanvas> component.
+
+Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://react.dev/link/error-boundaries to learn more about error boundaries.
+
+[2m2:49:01 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/CinematicCanvas.tsx[22m
+[2m2:49:01 pm[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [31m[Unhandled error] [1mReferenceError[22m: renderRequestRef is not defined
+[39m > src/CinematicCanvas.tsx:371:6
+    369 |    useEffect(() => {
+    370 |      return () => {
+    371 |        if (renderRequestRef.current) {
+        |        ^
+    372 |          cancelAnimationFrame(renderRequestRef.current)
+    373 |        }
+ > Object.react_stack_bottom_frame node_modules/react-dom/cjs/react-dom-client.development.js:28668:12
+ > runWithFiberInDEV node_modules/react-dom/cjs/react-dom-client.development.js:1045:29
+ > commitHookEffectListUnmount node_modules/react-dom/cjs/react-dom-client.development.js:13815:16
+ > commitHookPassiveUnmountEffects node_modules/react-dom/cjs/react-dom-client.development.js:13846:10
+ > disconnectPassiveEffect node_modules/react-dom/cjs/react-dom-client.development.js:17706:10
+ > recursivelyTraverseDisconnectPassiveEffects node_modules/react-dom/cjs/react-dom-client.development.js:17694:8
+ > disconnectPassiveEffect node_modules/react-dom/cjs/react-dom-client.development.js:17711:10
+ > recursivelyTraverseDisconnectPassiveEffects node_modules/react-dom/cjs/react-dom-client.development.js:17694:8
+ > disconnectPassiveEffect node_modules/react-dom/cjs/react-dom-client.development.js:17720:10
+
+[2m2:49:01 pm[22m [33m[1m[vite][22m[39m [33m[2m(client)[22m[39m [2m[console.warn] [22mAn error occurred in the <CinematicCanvas> component.
+
+Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://react.dev/link/error-boundaries to learn more about error boundaries.
+
+[2m2:49:01 pm[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [31m[Unhandled error] [1mReferenceError[22m: renderRequestRef is not defined
+[39m > src/CinematicCanvas.tsx:371:6
+    369 |    useEffect(() => {
+    370 |      return () => {
+    371 |        if (renderRequestRef.current) {
+        |        ^
+    372 |          cancelAnimationFrame(renderRequestRef.current)
+    373 |        }
+ > Object.react_stack_bottom_frame node_modules/react-dom/cjs/react-dom-client.development.js:28668:12
+ > runWithFiberInDEV node_modules/react-dom/cjs/react-dom-client.development.js:1045:29
+ > commitHookEffectListUnmount node_modules/react-dom/cjs/react-dom-client.development.js:13815:16
+ > commitHookPassiveUnmountEffects node_modules/react-dom/cjs/react-dom-client.development.js:13846:10
+ > commitPassiveUnmountEffectsInsideOfDeletedTree_begin node_modules/react-dom/cjs/react-dom-client.development.js:17754:12
+ > recursivelyTraversePassiveUnmountEffects node_modules/react-dom/cjs/react-dom-client.development.js:17575:12
+ > commitPassiveUnmountOnFiber node_modules/react-dom/cjs/react-dom-client.development.js:17617:10
+ > flushPassiveEffects node_modules/react-dom/cjs/react-dom-client.development.js:20130:8
+ > flushPendingEffects node_modules/react-dom/cjs/react-dom-client.development.js:20060:13
+
+[2m2:49:01 pm[22m [33m[1m[vite][22m[39m [33m[2m(client)[22m[39m [2m[console.warn] [22mAn error occurred in the <CinematicCanvas> component.
+
+Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://react.dev/link/error-boundaries to learn more about error boundaries.
+
+[2m2:49:11 pm[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [31m[Unhandled error] [1mReferenceError[22m: renderRequestRef is not defined
+[39m > src/CinematicCanvas.tsx:371:6
+    369 |    useEffect(() => {
+    370 |      return () => {
+    371 |        if (renderRequestRef.current) {
+        |        ^
+    372 |          cancelAnimationFrame(renderRequestRef.current)
+    373 |        }
+ > Object.react_stack_bottom_frame node_modules/react-dom/cjs/react-dom-client.development.js:28668:12
+ > runWithFiberInDEV node_modules/react-dom/cjs/react-dom-client.development.js:1045:29
+ > commitHookEffectListUnmount node_modules/react-dom/cjs/react-dom-client.development.js:13815:16
+ > commitHookPassiveUnmountEffects node_modules/react-dom/cjs/react-dom-client.development.js:13846:10
+ > disconnectPassiveEffect node_modules/react-dom/cjs/react-dom-client.development.js:17706:10
+ > recursivelyTraverseDisconnectPassiveEffects node_modules/react-dom/cjs/react-dom-client.development.js:17694:8
+ > disconnectPassiveEffect node_modules/react-dom/cjs/react-dom-client.development.js:17711:10
+ > recursivelyTraverseDisconnectPassiveEffects node_modules/react-dom/cjs/react-dom-client.development.js:17694:8
+ > disconnectPassiveEffect node_modules/react-dom/cjs/react-dom-client.development.js:17720:10
+
+[2m2:49:11 pm[22m [33m[1m[vite][22m[39m [33m[2m(client)[22m[39m [2m[console.warn] [22mAn error occurred in the <CinematicCanvas> component.
+
+Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://react.dev/link/error-boundaries to learn more about error boundaries.
+
+[2m2:49:11 pm[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [31m[Unhandled error] [1mReferenceError[22m: renderRequestRef is not defined
+[39m > src/CinematicCanvas.tsx:371:6
+    369 |    useEffect(() => {
+    370 |      return () => {
+    371 |        if (renderRequestRef.current) {
+        |        ^
+    372 |          cancelAnimationFrame(renderRequestRef.current)
+    373 |        }
+ > Object.react_stack_bottom_frame node_modules/react-dom/cjs/react-dom-client.development.js:28668:12
+ > runWithFiberInDEV node_modules/react-dom/cjs/react-dom-client.development.js:1045:29
+ > commitHookEffectListUnmount node_modules/react-dom/cjs/react-dom-client.development.js:13815:16
+ > commitHookPassiveUnmountEffects node_modules/react-dom/cjs/react-dom-client.development.js:13846:10
+ > commitPassiveUnmountEffectsInsideOfDeletedTree_begin node_modules/react-dom/cjs/react-dom-client.development.js:17754:12
+ > recursivelyTraversePassiveUnmountEffects node_modules/react-dom/cjs/react-dom-client.development.js:17575:12
+ > commitPassiveUnmountOnFiber node_modules/react-dom/cjs/react-dom-client.development.js:17617:10
+ > flushPassiveEffects node_modules/react-dom/cjs/react-dom-client.development.js:20130:8
+ > flushPendingEffects node_modules/react-dom/cjs/react-dom-client.development.js:20060:13
+
+[2m2:49:11 pm[22m [33m[1m[vite][22m[39m [33m[2m(client)[22m[39m [2m[console.warn] [22mAn error occurred in the <CinematicCanvas> component.
+
+Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://react.dev/link/error-boundaries to learn more about error boundaries.
+
+[2m2:49:13 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/CinematicCanvas.tsx[22m
+[2m2:49:14 pm[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [31m[Unhandled error] [1mReferenceError[22m: renderRequestRef is not defined
+[39m > src/CinematicCanvas.tsx:359:6
+    357 |    useEffect(() => {
+    358 |      return () => {
+    359 |        if (renderRequestRef.current) {
+        |        ^
+    360 |          cancelAnimationFrame(renderRequestRef.current)
+    361 |        }
+ > Object.react_stack_bottom_frame node_modules/react-dom/cjs/react-dom-client.development.js:28668:12
+ > runWithFiberInDEV node_modules/react-dom/cjs/react-dom-client.development.js:1045:29
+ > commitHookEffectListUnmount node_modules/react-dom/cjs/react-dom-client.development.js:13815:16
+ > commitHookPassiveUnmountEffects node_modules/react-dom/cjs/react-dom-client.development.js:13846:10
+ > disconnectPassiveEffect node_modules/react-dom/cjs/react-dom-client.development.js:17706:10
+ > recursivelyTraverseDisconnectPassiveEffects node_modules/react-dom/cjs/react-dom-client.development.js:17694:8
+ > disconnectPassiveEffect node_modules/react-dom/cjs/react-dom-client.development.js:17711:10
+ > recursivelyTraverseDisconnectPassiveEffects node_modules/react-dom/cjs/react-dom-client.development.js:17694:8
+ > disconnectPassiveEffect node_modules/react-dom/cjs/react-dom-client.development.js:17720:10
+
+[2m2:49:14 pm[22m [33m[1m[vite][22m[39m [33m[2m(client)[22m[39m [2m[console.warn] [22mAn error occurred in the <CinematicCanvas> component.
+
+Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://react.dev/link/error-boundaries to learn more about error boundaries.
+
+[2m2:49:14 pm[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [31m[Unhandled error] [1mReferenceError[22m: renderRequestRef is not defined
+[39m > src/CinematicCanvas.tsx:359:6
+    357 |    useEffect(() => {
+    358 |      return () => {
+    359 |        if (renderRequestRef.current) {
+        |        ^
+    360 |          cancelAnimationFrame(renderRequestRef.current)
+    361 |        }
+ > Object.react_stack_bottom_frame node_modules/react-dom/cjs/react-dom-client.development.js:28668:12
+ > runWithFiberInDEV node_modules/react-dom/cjs/react-dom-client.development.js:1045:29
+ > commitHookEffectListUnmount node_modules/react-dom/cjs/react-dom-client.development.js:13815:16
+ > commitHookPassiveUnmountEffects node_modules/react-dom/cjs/react-dom-client.development.js:13846:10
+ > commitPassiveUnmountEffectsInsideOfDeletedTree_begin node_modules/react-dom/cjs/react-dom-client.development.js:17754:12
+ > recursivelyTraversePassiveUnmountEffects node_modules/react-dom/cjs/react-dom-client.development.js:17575:12
+ > commitPassiveUnmountOnFiber node_modules/react-dom/cjs/react-dom-client.development.js:17617:10
+ > flushPassiveEffects node_modules/react-dom/cjs/react-dom-client.development.js:20130:8
+ > flushPendingEffects node_modules/react-dom/cjs/react-dom-client.development.js:20060:13
+
+[2m2:49:14 pm[22m [33m[1m[vite][22m[39m [33m[2m(client)[22m[39m [2m[console.warn] [22mAn error occurred in the <CinematicCanvas> component.
+
+Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://react.dev/link/error-boundaries to learn more about error boundaries.
+
+[2m2:49:20 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/CinematicCanvas.tsx[22m
+[2m2:49:20 pm[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [31m[Unhandled error] [1mReferenceError[22m: renderRequestRef is not defined
+[39m > src/CinematicCanvas.tsx:363:6
+    361 |    useEffect(() => {
+    362 |      return () => {
+    363 |        if (renderRequestRef.current) {
+        |        ^
+    364 |          cancelAnimationFrame(renderRequestRef.current)
+    365 |        }
+ > Object.react_stack_bottom_frame node_modules/react-dom/cjs/react-dom-client.development.js:28668:12
+ > runWithFiberInDEV node_modules/react-dom/cjs/react-dom-client.development.js:1045:29
+ > commitHookEffectListUnmount node_modules/react-dom/cjs/react-dom-client.development.js:13815:16
+ > commitHookPassiveUnmountEffects node_modules/react-dom/cjs/react-dom-client.development.js:13846:10
+ > disconnectPassiveEffect node_modules/react-dom/cjs/react-dom-client.development.js:17706:10
+ > recursivelyTraverseDisconnectPassiveEffects node_modules/react-dom/cjs/react-dom-client.development.js:17694:8
+ > disconnectPassiveEffect node_modules/react-dom/cjs/react-dom-client.development.js:17711:10
+ > recursivelyTraverseDisconnectPassiveEffects node_modules/react-dom/cjs/react-dom-client.development.js:17694:8
+ > disconnectPassiveEffect node_modules/react-dom/cjs/react-dom-client.development.js:17720:10
+
+[2m2:49:20 pm[22m [33m[1m[vite][22m[39m [33m[2m(client)[22m[39m [2m[console.warn] [22mAn error occurred in the <CinematicCanvas> component.
+
+Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://react.dev/link/error-boundaries to learn more about error boundaries.
+
+[2m2:49:20 pm[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [31m[Unhandled error] [1mReferenceError[22m: renderRequestRef is not defined
+[39m > src/CinematicCanvas.tsx:363:6
+    361 |    useEffect(() => {
+    362 |      return () => {
+    363 |        if (renderRequestRef.current) {
+        |        ^
+    364 |          cancelAnimationFrame(renderRequestRef.current)
+    365 |        }
+ > Object.react_stack_bottom_frame node_modules/react-dom/cjs/react-dom-client.development.js:28668:12
+ > runWithFiberInDEV node_modules/react-dom/cjs/react-dom-client.development.js:1045:29
+ > commitHookEffectListUnmount node_modules/react-dom/cjs/react-dom-client.development.js:13815:16
+ > commitHookPassiveUnmountEffects node_modules/react-dom/cjs/react-dom-client.development.js:13846:10
+ > commitPassiveUnmountEffectsInsideOfDeletedTree_begin node_modules/react-dom/cjs/react-dom-client.development.js:17754:12
+ > recursivelyTraversePassiveUnmountEffects node_modules/react-dom/cjs/react-dom-client.development.js:17575:12
+ > commitPassiveUnmountOnFiber node_modules/react-dom/cjs/react-dom-client.development.js:17617:10
+ > flushPassiveEffects node_modules/react-dom/cjs/react-dom-client.development.js:20130:8
+ > flushPendingEffects node_modules/react-dom/cjs/react-dom-client.development.js:20060:13
+
+[2m2:49:20 pm[22m [33m[1m[vite][22m[39m [33m[2m(client)[22m[39m [2m[console.warn] [22mAn error occurred in the <CinematicCanvas> component.
+
+Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://react.dev/link/error-boundaries to learn more about error boundaries.
+
+[2m2:49:36 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/CinematicCanvas.tsx[22m
+[2m2:50:59 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/smoothScroll.ts[22m
+[2m2:51:02 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/CinematicCanvas.tsx[22m
+[2m2:51:13 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css[22m
+[2m2:51:48 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css[22m
+[2m2:52:02 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css[22m
+[2m3:03:56 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css[22m
+[2m3:10:04 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css[22m
+[2m3:19:44 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/CinematicCanvas.tsx[22m
+[2m3:19:50 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/smoothScroll.ts[22m
+[2m3:25:12 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/CinematicCanvas.tsx[22m
+[2m3:25:30 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/CinematicCanvas.tsx[22m
+[2m3:25:35 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/CinematicCanvas.tsx[22m
+[2m3:25:42 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/CinematicCanvas.tsx[22m
+[2m3:25:53 pm[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [31m[Unhandled error] [1mTypeError[22m: trigger.addEventListener is not a function
+[39m > src/CinematicCanvas.tsx:351:12
+    349 |      // A refresh may also be triggered by something other than a resize (a font
+    350 |      // load, a late decode). Keep the spacing honest in that case too.
+    351 |      trigger.addEventListener('refresh', () => {
+        |              ^
+    352 |        reconcilePinSpacing(Math.max(1, Math.round(window.innerHeight)))
+    353 |      })
+ > Object.react_stack_bottom_frame node_modules/react-dom/cjs/react-dom-client.development.js:28656:19
+ > runWithFiberInDEV node_modules/react-dom/cjs/react-dom-client.development.js:1045:29
+ > commitHookEffectListMount node_modules/react-dom/cjs/react-dom-client.development.js:13748:28
+ > commitHookPassiveMountEffects node_modules/react-dom/cjs/react-dom-client.development.js:13835:10
+ > commitPassiveMountOnFiber node_modules/react-dom/cjs/react-dom-client.development.js:16906:12
+ > recursivelyTraversePassiveMountEffects node_modules/react-dom/cjs/react-dom-client.development.js:16851:12
+ > commitPassiveMountOnFiber node_modules/react-dom/cjs/react-dom-client.development.js:16898:10
+ > recursivelyTraversePassiveMountEffects node_modules/react-dom/cjs/react-dom-client.development.js:16851:12
+ > commitPassiveMountOnFiber node_modules/react-dom/cjs/react-dom-client.development.js:17183:10
+
+[2m3:25:53 pm[22m [33m[1m[vite][22m[39m [33m[2m(client)[22m[39m [2m[console.warn] [22mAn error occurred in the <CinematicCanvas> component.
+
+Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://react.dev/link/error-boundaries to learn more about error boundaries.
+
+[2m3:25:53 pm[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [31m[Unhandled error] [1mNotFoundError[22m: Failed to execute 'removeChild' on 'Node': The node to be removed is not a child of this node.
+[39m > removeChildFromContainer node_modules/react-dom/cjs/react-dom-client.development.js:23987:8
+ > runWithFiberInDEV node_modules/react-dom/cjs/react-dom-client.development.js:1045:29
+ > commitDeletionEffectsOnFiber node_modules/react-dom/cjs/react-dom-client.development.js:15499:16
+ > recursivelyTraverseDeletionEffects node_modules/react-dom/cjs/react-dom-client.development.js:15409:8
+ > commitDeletionEffectsOnFiber node_modules/react-dom/cjs/react-dom-client.development.js:15573:10
+ > recursivelyTraverseDeletionEffects node_modules/react-dom/cjs/react-dom-client.development.js:15409:8
+ > commitDeletionEffectsOnFiber node_modules/react-dom/cjs/react-dom-client.development.js:15573:10
+ > recursivelyTraverseDeletionEffects node_modules/react-dom/cjs/react-dom-client.development.js:15409:8
+ > commitDeletionEffectsOnFiber node_modules/react-dom/cjs/react-dom-client.development.js:15633:10
+ > recursivelyTraverseMutationEffects node_modules/react-dom/cjs/react-dom-client.development.js:15773:10
+
+[2m3:25:53 pm[22m [33m[1m[vite][22m[39m [33m[2m(client)[22m[39m [2m[console.warn] [22mAn error occurred in the <canvas> component.
+
+Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://react.dev/link/error-boundaries to learn more about error boundaries.
+
+[2m3:26:52 pm[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [31m[Unhandled error] [1mTypeError[22m: trigger.addEventListener is not a function
+[39m > src/CinematicCanvas.tsx:351:12
+    349 |      // A refresh may also be triggered by something other than a resize (a font
+    350 |      // load, a late decode). Keep the spacing honest in that case too.
+    351 |      trigger.addEventListener('refresh', () => {
+        |              ^
+    352 |        reconcilePinSpacing(Math.max(1, Math.round(window.innerHeight)))
+    353 |      })
+ > Object.react_stack_bottom_frame node_modules/react-dom/cjs/react-dom-client.development.js:28656:19
+ > runWithFiberInDEV node_modules/react-dom/cjs/react-dom-client.development.js:1045:29
+ > commitHookEffectListMount node_modules/react-dom/cjs/react-dom-client.development.js:13748:28
+ > commitHookPassiveMountEffects node_modules/react-dom/cjs/react-dom-client.development.js:13835:10
+ > commitPassiveMountOnFiber node_modules/react-dom/cjs/react-dom-client.development.js:16906:12
+ > recursivelyTraversePassiveMountEffects node_modules/react-dom/cjs/react-dom-client.development.js:16851:12
+ > commitPassiveMountOnFiber node_modules/react-dom/cjs/react-dom-client.development.js:16898:10
+ > recursivelyTraversePassiveMountEffects node_modules/react-dom/cjs/react-dom-client.development.js:16851:12
+ > commitPassiveMountOnFiber node_modules/react-dom/cjs/react-dom-client.development.js:17183:10
+
+[2m3:26:52 pm[22m [33m[1m[vite][22m[39m [33m[2m(client)[22m[39m [2m[console.warn] [22mAn error occurred in the <CinematicCanvas> component.
+
+Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://react.dev/link/error-boundaries to learn more about error boundaries.
+
+[2m3:26:52 pm[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [31m[Unhandled error] [1mNotFoundError[22m: Failed to execute 'removeChild' on 'Node': The node to be removed is not a child of this node.
+[39m > removeChildFromContainer node_modules/react-dom/cjs/react-dom-client.development.js:23987:8
+ > runWithFiberInDEV node_modules/react-dom/cjs/react-dom-client.development.js:1045:29
+ > commitDeletionEffectsOnFiber node_modules/react-dom/cjs/react-dom-client.development.js:15499:16
+ > recursivelyTraverseDeletionEffects node_modules/react-dom/cjs/react-dom-client.development.js:15409:8
+ > commitDeletionEffectsOnFiber node_modules/react-dom/cjs/react-dom-client.development.js:15573:10
+ > recursivelyTraverseDeletionEffects node_modules/react-dom/cjs/react-dom-client.development.js:15409:8
+ > commitDeletionEffectsOnFiber node_modules/react-dom/cjs/react-dom-client.development.js:15573:10
+ > recursivelyTraverseDeletionEffects node_modules/react-dom/cjs/react-dom-client.development.js:15409:8
+ > commitDeletionEffectsOnFiber node_modules/react-dom/cjs/react-dom-client.development.js:15633:10
+ > recursivelyTraverseMutationEffects node_modules/react-dom/cjs/react-dom-client.development.js:15773:10
+
+[2m3:26:52 pm[22m [33m[1m[vite][22m[39m [33m[2m(client)[22m[39m [2m[console.warn] [22mAn error occurred in the <canvas> component.
+
+Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://react.dev/link/error-boundaries to learn more about error boundaries.
+
+[2m3:27:28 pm[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [31m[Unhandled error] [1mTypeError[22m: trigger.addEventListener is not a function
+[39m > src/CinematicCanvas.tsx:351:12
+    349 |      // A refresh may also be triggered by something other than a resize (a font
+    350 |      // load, a late decode). Keep the spacing honest in that case too.
+    351 |      trigger.addEventListener('refresh', () => {
+        |              ^
+    352 |        reconcilePinSpacing(Math.max(1, Math.round(window.innerHeight)))
+    353 |      })
+ > Object.react_stack_bottom_frame node_modules/react-dom/cjs/react-dom-client.development.js:28656:19
+ > runWithFiberInDEV node_modules/react-dom/cjs/react-dom-client.development.js:1045:29
+ > commitHookEffectListMount node_modules/react-dom/cjs/react-dom-client.development.js:13748:28
+ > commitHookPassiveMountEffects node_modules/react-dom/cjs/react-dom-client.development.js:13835:10
+ > commitPassiveMountOnFiber node_modules/react-dom/cjs/react-dom-client.development.js:16906:12
+ > recursivelyTraversePassiveMountEffects node_modules/react-dom/cjs/react-dom-client.development.js:16851:12
+ > commitPassiveMountOnFiber node_modules/react-dom/cjs/react-dom-client.development.js:16898:10
+ > recursivelyTraversePassiveMountEffects node_modules/react-dom/cjs/react-dom-client.development.js:16851:12
+ > commitPassiveMountOnFiber node_modules/react-dom/cjs/react-dom-client.development.js:17183:10
+
+[2m3:27:28 pm[22m [33m[1m[vite][22m[39m [33m[2m(client)[22m[39m [2m[console.warn] [22mAn error occurred in the <CinematicCanvas> component.
+
+Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://react.dev/link/error-boundaries to learn more about error boundaries.
+
+[2m3:27:28 pm[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [31m[Unhandled error] [1mNotFoundError[22m: Failed to execute 'removeChild' on 'Node': The node to be removed is not a child of this node.
+[39m > removeChildFromContainer node_modules/react-dom/cjs/react-dom-client.development.js:23987:8
+ > runWithFiberInDEV node_modules/react-dom/cjs/react-dom-client.development.js:1045:29
+ > commitDeletionEffectsOnFiber node_modules/react-dom/cjs/react-dom-client.development.js:15499:16
+ > recursivelyTraverseDeletionEffects node_modules/react-dom/cjs/react-dom-client.development.js:15409:8
+ > commitDeletionEffectsOnFiber node_modules/react-dom/cjs/react-dom-client.development.js:15573:10
+ > recursivelyTraverseDeletionEffects node_modules/react-dom/cjs/react-dom-client.development.js:15409:8
+ > commitDeletionEffectsOnFiber node_modules/react-dom/cjs/react-dom-client.development.js:15573:10
+ > recursivelyTraverseDeletionEffects node_modules/react-dom/cjs/react-dom-client.development.js:15409:8
+ > commitDeletionEffectsOnFiber node_modules/react-dom/cjs/react-dom-client.development.js:15633:10
+ > recursivelyTraverseMutationEffects node_modules/react-dom/cjs/react-dom-client.development.js:15773:10
+
+[2m3:27:28 pm[22m [33m[1m[vite][22m[39m [33m[2m(client)[22m[39m [2m[console.warn] [22mAn error occurred in the <canvas> component.
+
+Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://react.dev/link/error-boundaries to learn more about error boundaries.
+
+[2m3:27:46 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/CinematicCanvas.tsx[22m
+[2m3:29:19 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/CinematicCanvas.tsx[22m
+[2m3:40:04 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/CinematicCanvas.tsx[22m
+[2m7:04:04 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css[22m
+[2m7:04:08 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css[22m
+[2m7:04:12 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css[22m
+[2m7:04:14 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css[22m
+[2m7:04:17 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css[22m
+[2m7:04:23 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css[22m
+[2m7:04:25 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/ui/Navbar.tsx[22m
+[2m7:04:28 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/ui/Navbar.tsx[22m
+[2m12:49:00 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css[22m
+[2m12:49:06 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css[22m
+[2m12:49:18 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css[22m
+[2m12:49:21 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css[22m
+[2m12:49:25 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css[22m
+[2m12:49:28 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css[22m
+[2m12:49:41 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/ui/Navbar.tsx[22m

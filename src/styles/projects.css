@@ -1,0 +1,36 @@
+/* ==========================================================================
+   HERO SCOPE — the fixed hero overlay steps aside when post-film content
+   enters the viewport.
+   --------------------------------------------------------------------------
+   The hero lives in the fixed UI layer, so it stays glued to the screen over
+   any content that scrolls in afterward unless it is visually dismissed.
+   This is scoped to a neutral wrapper class around <Hero /> in App; Hero
+   itself, its DOM and its styles are untouched. Fade + visibility only — no
+   movement — and reversed automatically when the user scrolls back to the
+   film.
+
+   ARMED ONLY ONCE THE FILM'S PIN EXISTS. The toggle is driven by the rect of
+   the post-film Work section, but that rect is only meaningful once
+   CinematicCanvas has created its ScrollTrigger (after the 183 frames settle).
+   Before then the document is still in its transient, pre-pin state, #work
+   sits directly under the un-pinned canvas near the fold, and reading its rect
+   would dismiss Home before the user has scrolled. So the hide is gated on the
+   same .pin-spacer the film already reconciles against, and re-evaluated when
+   the document layout settles — never on a timer.
+   ========================================================================== */
+
+.hero-scope {
+  transition: opacity 400ms ease, visibility 400ms ease;
+}
+
+.hero-scope--hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-scope {
+    transition: none;
+  }
+}

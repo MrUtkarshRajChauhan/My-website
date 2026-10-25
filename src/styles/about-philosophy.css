@@ -1,0 +1,118 @@
+/* ==========================================================================
+   ABOUT PHILOSOPHY — Block 02
+   --------------------------------------------------------------------------
+   Lives inside the fixed UI layer, in a dedicated RIGHT-side text lane
+   opposite the Introduction. It PERSISTS once entered.
+
+   Proportional targets (spec §7):
+     left edge  ≈ 67.3% vw      top edge   ≈ 12.8% vh      max width ≈ 360px
+
+   FACE CLEARANCE
+   The right lane's LEFT edge sits at 67.3vw. A luminance scan of the real
+   183-frame Canvas measured the subject's dense silhouette peaking at
+   ~60.6vw, so the lane keeps a clear margin off the subject's body. The lane
+   width additionally reserves the right-hand progress-rail gutter
+   (--about-rail-gutter) so the two never overlap.
+   ========================================================================== */
+
+.about-philosophy {
+  position: absolute;
+  left: 67.3vw;
+  top: clamp(3.75rem, 11.5vh, 12rem);
+  z-index: 2;
+  pointer-events: none;
+  /* Consistent left-aligned column: the number, label, headline, body and
+     divider all share the block's left edge (no detached right-aligned
+     marker). */
+  text-align: left;
+}
+
+/* Width = the proportional target, capped so the block cannot reach the
+   subject on the left nor the progress rail on the right. */
+.about-philosophy__clip {
+  width: min(
+    clamp(14.5rem, 24vw, 22.5rem),
+    calc(100vw - 67.3vw - var(--about-rail-gutter))
+  );
+  overflow: hidden;
+}
+
+.about-philosophy__content {
+  width: 100%;
+  will-change: transform, opacity;
+}
+
+/* MARKER — "02 — PHILOSOPHY" --------------------------------------------- */
+
+.about-philosophy__marker {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.3rem;
+}
+
+.about-philosophy__marker-num {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: clamp(1.4375rem, 1.4vw, 1.8125rem); /* 23-29px */
+  line-height: 1;
+  letter-spacing: 0.02em;
+  color: var(--color-ink-soft);
+}
+
+.about-philosophy__marker-label {
+  font-family: var(--font-ui);
+  font-size: clamp(0.625rem, 0.56vw, 0.6875rem); /* 10-11px */
+  line-height: 1;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--color-ink-muted);
+}
+
+/* HEADLINE — exact two lines; the closing word of each is mint ----------- */
+
+.about-philosophy__headline {
+  display: flex;
+  flex-direction: column;
+  margin-top: clamp(0.3125rem, 0.75vh, 0.875rem);
+  font-family: 'Playfair Display', Georgia, serif;
+  font-weight: 400;
+  font-size: clamp(1.375rem, 2.2vw, 2.375rem); /* 22-38px */
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+  color: var(--color-ink-ivory);
+}
+
+.about-philosophy__highlight {
+  color: var(--color-about-accent);
+}
+
+/* SUPPORTING COPY --------------------------------------------------------- */
+
+/* Controlled width — calibrated (reference desktop type scale, 15px) to a
+   ~298px column so the paragraph wraps into five lines beginning
+   "Every decision should serve a purpose—from …" instead of running at the
+   full ~360px lane width, which read too dense against the two-line heading.
+   The clamp hands the paragraph back to the lane clip on narrow viewports. */
+
+.about-philosophy__paragraph {
+  margin-top: clamp(0.3125rem, 0.7vh, 0.75rem);
+  max-width: clamp(285px, 15.52vw, 298px);
+  font-family: var(--font-body);
+  font-size: clamp(0.8125rem, 0.85vw, 0.9375rem); /* 13-15px */
+  line-height: 1.45;
+  color: var(--color-ink-soft);
+}
+
+/* DIVIDER — 1px, part of the block, fading toward its (right) end -------- */
+
+.about-philosophy__divider {
+  display: block;
+  margin-top: clamp(0.5rem, 1vh, 1.125rem);
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    color-mix(in srgb, var(--color-ink-ivory) 22%, transparent),
+    color-mix(in srgb, var(--color-ink-ivory) 9%, transparent) 62%,
+    transparent 100%
+  );
+}

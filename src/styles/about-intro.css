@@ -1,0 +1,166 @@
+/* ==========================================================================
+   ABOUT — LEFT LANE
+   --------------------------------------------------------------------------
+   The Introduction and My Approach share one absolutely-positioned lane.
+   Sharing a lane (instead of positioning each block independently) makes the
+   second block flow below the first at whatever height the first actually
+   renders. That matters because the type scales with the viewport: the
+   Introduction is ~196px tall at 1000x700 but ~263px at 1920x1080, so any
+   fixed vh offset for the second block painted it through the first on tall
+   viewports (verified at 1920x1080, 2560x1440 and 800x1200).
+
+   Lane left: the Introduction's proportional edge (10.2vw), floored by the
+   bottom-left SCROLL indicator's gutter. That indicator is preserved for the
+   whole About phase, and the lane's lower block would otherwise paint across
+   it on short viewports.
+
+   APPROACH SHIFT (calibration): the Approach no longer aligns horizontally
+   with the Introduction. Its target left edge is ~5vw, kept below the lane's
+   own left via --about-approach-left (see .about-left-lane): 5vw is honoured
+   on wide viewports but the SCROLL cue's own width + margin floor still
+   applies beneath the composition's lower block, so text can never paint
+   across the preserved indicator on short viewports.
+
+   Lane top: 18vh, floored by the hero's eyebrow row. That row belongs to the
+   vertically-centred hero column and is lifted -50px, so on tall viewports it
+   drifts down toward ~50vh; at 18vh alone the Introduction shared its band and
+   painted through it (verified at 1920x1080). On short viewports 18vh wins, so
+   the verified 1000x700 composition is unchanged.
+   ========================================================================== */
+
+.about-left-lane {
+  position: absolute;
+  --about-lane-left: max(
+    clamp(2rem, 10.2vw, 12.5rem),
+    calc(var(--frame-gutter) + 5rem)
+  );
+  /* The Approach's own left edge: ~5vw at wide viewports, floored by the
+     bottom-left SCROLL indicator's gutter (its line, label and required
+     breathing margin) exactly like the lane above. */
+  --about-approach-left: max(
+    clamp(2rem, 5vw, 6.5rem),
+    calc(var(--frame-gutter) + 4.25rem)
+  );
+  left: var(--about-lane-left);
+  top: max(clamp(5.5rem, 18vh, 15rem), calc(50vh - 15rem));
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: clamp(0.5rem, 1.4vh, 1rem);
+  z-index: 2;
+  pointer-events: none;
+}
+
+/* ==========================================================================
+   ABOUT INTRODUCTION — Block 01
+   --------------------------------------------------------------------------
+   First block of the left lane, leaving the central subject unobstructed. The
+   clip IS the block's lane: it begins parked beyond the clip's right edge and
+   is only ever revealed through its own boundaries. It PERSISTS once entered.
+
+   Proportional targets (spec §7):
+     left edge  ≈ 10.2% vw      top edge   ≈ 21.2% vh
+     max width  ≈ 340px
+   The width is capped so the block's right edge can never reach the protected
+   centred band that carries the subject.
+   ========================================================================== */
+
+.about-intro {
+  position: relative;
+}
+
+/* The bounded clipping lane. Width = the proportional target (clamp ≈ 340px)
+   but its RIGHT EDGE is additionally capped at 33vw. The subject's lit
+   silhouette begins at ~35.5vw, so 33vw keeps a clear margin off the face. */
+.about-intro__clip {
+  width: min(
+    clamp(15.5rem, 21vw, 21.25rem),
+    calc(33vw - var(--about-lane-left))
+  );
+  overflow: hidden;
+}
+
+/* The moving block. Its width equals the lane width, so translateX(100%) —
+   applied by the shared useAboutEntrance hook — parks it exactly one
+   lane-width to the right, fully clipped, before the entrance starts. */
+.about-intro__content {
+  width: 100%;
+  will-change: transform, opacity;
+}
+
+/* MARKER — "01 — INTRODUCTION" ------------------------------------------- */
+
+.about-intro__marker {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.3rem;
+}
+
+.about-intro__marker-num {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: clamp(1.4375rem, 1.5vw, 1.875rem); /* 23-30px */
+  line-height: 1;
+  letter-spacing: 0.02em;
+  color: var(--color-ink-soft);
+}
+
+.about-intro__marker-label {
+  font-family: var(--font-ui);
+  font-size: clamp(0.625rem, 0.56vw, 0.6875rem); /* 10-11px */
+  line-height: 1;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--color-ink-muted);
+}
+
+/* HEADLINE — exact three lines, ivory then mint on the last two ---------- */
+
+.about-intro__headline {
+  display: flex;
+  flex-direction: column;
+  margin-top: clamp(0.375rem, 0.85vh, 1rem);
+  font-family: 'Playfair Display', Georgia, serif;
+  font-weight: 400;
+  font-size: clamp(1.375rem, 2.2vw, 2.625rem); /* 22-42px */
+  line-height: 1.04;
+  letter-spacing: -0.01em;
+  color: var(--color-ink-ivory);
+}
+
+.about-intro__highlight {
+  color: var(--color-about-accent);
+}
+
+/* SUPPORTING COPY --------------------------------------------------------- */
+
+/* The paragraph is narrower than the heading column on purpose — the target
+   reference wraps this copy at a controlled ~286px column at the reference
+   desktop type scale (15px), three lines: "…digital experiences" /
+   "…communicate clearly," / "earn trust, and turn visitors into customers."
+   The clamp keeps the first-line break stable down to ~1600px and hands the
+   paragraph back to the lane's clip below that, so narrow viewports keep
+   wrapping naturally with no overflow. */
+
+.about-intro__paragraph {
+  margin-top: clamp(0.375rem, 0.8vh, 0.875rem);
+  max-width: clamp(240px, 14.9vw, 286px);
+  font-family: var(--font-body);
+  font-size: clamp(0.8125rem, 0.85vw, 0.9375rem); /* 13-15px */
+  line-height: 1.42;
+  color: var(--color-ink-soft);
+}
+
+/* DIVIDER — 1px, part of the block, fading toward its right end ---------- */
+
+.about-intro__divider {
+  display: block;
+  margin-top: clamp(0.75rem, 1.3vh, 1.5rem);
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    color-mix(in srgb, var(--color-ink-ivory) 22%, transparent),
+    color-mix(in srgb, var(--color-ink-ivory) 9%, transparent) 62%,
+    transparent 100%
+  );
+}

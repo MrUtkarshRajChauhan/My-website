@@ -1,0 +1,211 @@
+/* ==========================================================================
+   LAYOUT & STACKING FOUNDATION
+   --------------------------------------------------------------------------
+   LAYER SYSTEM (values live in variables.css — declare new layers there)
+   --------------------------------------------------------------------------
+   Document order, bottom to top:
+
+     0  --z-page              html/body background (--color-bg-deep).
+                               No element. It is the fallback the first
+                               frame paints over, so there is never a light
+                               flash before the film decodes.
+
+     1  --z-canvas            <CinematicCanvas />. A bare <canvas> that is
+                               the ScrollTrigger trigger AND the pinned
+                               element, so it is deliberately left as a
+                               direct child of the React root. Do not wrap
+                               it in a positioned or sized container: doing
+                               so would relocate the ScrollTrigger
+                               pin-spacer and change the measured pin
+                               geometry. Its width, height and DPR buffer
+                               are owned by JS, not by this stylesheet.
+
+     2  --z-cinematic-overlay The existing fixed vignette / gradient / tint
+                               treatment in index.css. Unchanged. It stays
+                               above the film and below all future UI.
+
+     3  --z-ui                .ui-layer. The container every future piece of
+                               portfolio UI mounts into (navigation, hero,
+                               editorial sections, signature). It exists now
+                               and is intentionally empty.
+
+     4  --z-interactive       Reserved for future focus rings, open menus and
+                               anything that must sit above the rest of the
+                               UI layer while remaining clickable.
+
+   All four overlay-bearing layers are position: fixed and full-bleed, so
+   they are removed from document flow and cannot affect the ~600vh scroll
+   distance that the pin depends on.
+
+   --------------------------------------------------------------------------
+   16:9 DESKTOP STAGE
+   --------------------------------------------------------------------------
+   Targeted range, all 16:9: 1920x1080, 1600x900, 1440x810, 1366x768,
+   1280x720.
+
+   The film fills the viewport: the canvas scales the 16:9 source to cover the
+   box in JS and crops only the overflow outside 16:9, so there are never bars
+   of page background at any edge. No aspect-ratio is declared here because the
+   drawing buffer and the CSS box are both computed at runtime and a CSS
+   aspect-ratio would fight that.
+
+   Sizing is fluid rather than breakpoint-based: --frame-gutter and the clamp()
+   type scale in variables.css scale UI inset and text together across the
+   range above. Mobile and tablet layouts are out of scope for this step.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   LAYER 1 — the frame engine.
+   Kept as a bare <canvas>, direct child of the React root: it is the
+   ScrollTrigger trigger AND the pinned element, so wrapping it in a
+   positioned or sized container would relocate the pin-spacer and change
+   the measured pin geometry. Its width, height and DPR buffer are owned by
+   JS, not here.
+
+   z-index is applied to make the documented layer real rather than
+   aspirational. ScrollTrigger pins with position: fixed and leaves z-index
+   alone, so without this the canvas sits at z-index: auto. The pin-spacer is
+   position: relative with z-index: auto, so it creates no stacking context
+   and the canvas competes directly with the sibling overlay and UI layer.
+   Result: canvas 1 < overlay 2 < ui 3.
+   -------------------------------------------------------------------------- */
+canvas {
+  z-index: var(--z-canvas);
+}
+
+/* --------------------------------------------------------------------------
+   LAYER 1 — the post-cinematic EXIT RUNWAY (document flow).
+
+   One block of 4.48 viewport heights placed between the pinned film and Work.
+   It carries no document-level paint of its own — the frozen final frame is
+   held `position: fixed` over it by <ExpertiseExitRunway /> while it scrolls,
+   so its background (a safety net against a flash) is never actually seen; it
+   only lengthens the document by the distance the separate Expertise exit
+   phase scrubs across, so the cinematic's 6 vh of pin spacing and its
+   183-frame mapping are never touched. The trailing extra length carries the
+   reading hold (0.40 vh) and the statement's own exit (0.20 vh), so the
+   headline is fully hidden before Work's first pixel reaches the fold. It
+   also mounts two fixed, viewport-anchored children that are unaffected by this
+   block's scrolling:
+     • the persistent static Work background (`.static-background`) at
+       --z-content — above the canvas and the cinematic overlay, below Work and
+       the UI layer, so one layer serves both the crossfade and the Work page;
+     • the closing statement "Enough talk. / See the work!" at
+       --z-cinematic-transition.
+   -------------------------------------------------------------------------- */
+.expertise-exit-runway {
+  height: 448vh;
+  background-color: var(--color-bg-deep);
+}
+
+/* --------------------------------------------------------------------------
+   PERSISTENT STATIC BACKGROUND — the new visual environment after the film.
+
+   ONE fixed, viewport-sized layer. <ExpertiseExitRunway /> fades it in over the
+   frozen final frame across the crossfade window, then never moves it again:
+   cover-fitted (aspect preserved), centred, never tiled, on the deep page
+   colour so there is no flash before it decodes. It sits above the canvas (1)
+   and the cinematic overlay (2) and below Work (3, later in document order) and
+   the UI layer (3), so the normal-flow Work section scrolls over a background
+   that is genuinely stationary. `opacity: 0` is the OFF state; the runway's
+   controller owns the value.
+   -------------------------------------------------------------------------- */
+.static-background {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-content);
+
+  pointer-events: none;
+  opacity: 0;
+
+  background-color: var(--color-bg-deep);
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+/* --------------------------------------------------------------------------
+   THREAD BEADS — inline SVG overlay inside `.static-background`.
+
+   The artwork already paints five thin, curved threads (traced from the source
+   pixels in <ExpertiseExitRunway />'s THREAD_SHIMMER). Those lines are NEVER
+   redrawn here: the path geometry lives in <defs> purely to feed each bead's
+   <animateMotion>, so every painted line remains exactly what the raster
+   already contains. The overlay contributes only one small, dimensional
+   mint-neon bead per thread — radial halo, mint body, bright mint-white core
+   and an offset specular — travelling slowly along its own curve.
+
+   The raster background is never touched: the overlay is a second paint inside
+   the same fixed layer, aligned to it by matching viewBox (1408 × 736 = the
+   asset's exact pixel box) and `xMidYMid slice` (= `cover` + `center center`),
+   so it crops with the image at every viewport.
+
+   LAYERING — background paint, then this overlay, then `.expertise-exit-
+   transition` (later in document order) and the Work/Contact content above the
+   layer. This block adds no background, no layer, no gradient and no scroll
+   bus.
+
+   MOTION — native SMIL only: <animateMotion>/<mpath> for position plus one
+   <animate> per bead for the fade. No CSS animation, no canvas, no rAF, no
+   GSAP ticker, no mouse input, no React state and no filter. Only a bead's
+   position and opacity change; the background and every line are static.
+   -------------------------------------------------------------------------- */
+.work-background__thread-overlay {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+/* Motion-only paths. They sit in <defs>, so the renderer never draws them —
+   they exist solely to give <animateMotion> its geometry. Clearing the paint
+   explicitly makes it impossible for the overlay to stroke the artwork's own
+   lines a second time. */
+.work-background__thread-overlay path {
+  fill: none;
+  stroke: none;
+}
+
+/* Reduced motion: the beads are withdrawn entirely, leaving the original
+   background exactly as the artwork ships it — no movement, no glow and no
+   frozen dot left mid-curve. */
+@media (prefers-reduced-motion: reduce) {
+  .thread-bead {
+    display: none;
+  }
+}
+
+
+/* --------------------------------------------------------------------------
+   LAYER 3 — the future UI layer.
+   Transparent to wheel, touch and pointer by default so it can never
+   interfere with Lenis or the pinned canvas underneath. Individual
+   interactive children opt back in via .ui-layer--interactive.
+   -------------------------------------------------------------------------- */
+.ui-layer {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-ui);
+  pointer-events: none;
+}
+
+/* Opt-in hook for future steps. Applied to whatever inside .ui-layer should
+   actually receive clicks — buttons, links, menus. Left undefined in terms
+   of appearance on purpose: no navbar, hero or content is built here. */
+.ui-layer--interactive {
+  pointer-events: auto;
+}
+
+/* --------------------------------------------------------------------------
+   EDGE ALIGNMENT
+   --------------------------------------------------------------------------
+   Shared inset for future UI so every layer aligns to the same optical edge
+   at the viewport. Declared now, applied later.
+   -------------------------------------------------------------------------- */
+.ui-inset {
+  padding-inline: var(--frame-gutter);
+  padding-block: var(--frame-inset);
+}
